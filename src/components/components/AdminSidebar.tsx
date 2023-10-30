@@ -11,13 +11,13 @@ export default function AdminSidebar() {
     </div>
     <ul>
       <li>
-        <Link to="/dashboard/admin/category">Category</Link>
+        <Link to="/admin-dashboard/admin/category">Category</Link>
         </li>
       <li>
-        <Link to="/dashboard/admin/products">Products</Link>
+        <Link to="/admin-dashboard/admin/products">Products</Link>
         </li>
       <li>
-        <Link to="/dashboard/admin/userList">Users List</Link>
+        <Link to="/admin-dashboard/admin/userList">Users List</Link>
         </li>
     </ul>
   </aside>

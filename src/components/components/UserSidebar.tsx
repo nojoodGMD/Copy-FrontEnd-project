@@ -12,7 +12,10 @@ export default function UserSidebar() {
     </div>
     <ul>
       <li>
-        <Link to="/dashboard/user/Userprofile">Profile</Link>
+        <Link to="/user-dashboard/user/Userprofile">Profile</Link>
+        </li>
+      <li>
+        <Link to="/user-dashboard/user/UserOrders">Orders</Link>
         </li>
     </ul>
   </aside>

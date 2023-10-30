@@ -18,13 +18,15 @@ export type UserState = {
   error: null | string
   isLoading: boolean
   isLogin: boolean
+  userData : null | User
 }
 
 const initialState: UserState = {
-    users: [],
+  users: [],
   error: null,
   isLoading: false,
-  isLogin:false
+  isLogin:false,
+  userData: null
 }
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers',async()=>{
@@ -35,7 +37,16 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers',async()=>{
 export const UsersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    login:(state,action)=>{
+      state.isLogin = true;
+      state.userData = action.payload;
+    },
+    logout:(state)=>{
+      state.isLogin = false;
+      state.userData = null;
+    }
+  },
   extraReducers(builder){
     builder.addCase(fetchUsers.pending, (state)=>{
       state.isLoading = true;
@@ -53,4 +64,5 @@ export const UsersSlice = createSlice({
  
 })
 
+export const {login, logout} = UsersSlice.actions;
 export default UsersSlice.reducer

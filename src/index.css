@@ -42,3 +42,7 @@
   display: grid;
   grid-template-columns: auto auto auto;
 }
+
+.admin__product-img{
+  width: 100px;
+}

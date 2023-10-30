@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from '../../redux/store'
 import { fetchProducts } from '../../redux/slices/products/productSlice'
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Table from 'react-bootstrap/Table';
 
 export default function Products() {
 
@@ -31,18 +32,36 @@ if(error){
     <h2>Create a product</h2>
     <p>form goes here</p>
     <h2>List of products</h2>
-    <section className='products'>
+    <section>
       {products.length > 0 && products.map((product)=>{
         return(
           <div key={product.id}>
-            <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={product.image} />
-      <Card.Body>
-        <Card.Title>{product.name}</Card.Title>
-        <Button variant="primary">Edit</Button>
-        <Button variant="primary">Delete</Button>
-      </Card.Body>
-    </Card>
+            <Table responsive="sm">
+            <thead>
+          <tr>
+            <th>id</th>
+            <th> </th>
+            <th>Product Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Variance</th>
+            <th>Sizes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{product.id}</td>
+            <td><input type="checkbox" /></td>
+            <td><img className='admin__product-img' src={product.image} alt="" /></td>
+            <td>{product.name}</td>
+            <td>{product.description}</td>
+            <td>{product.variants}</td>
+            <td>{product.sizes}</td>
+          </tr>
+          
+        </tbody>
+      </Table>
+      
           </div>
         )
       })}

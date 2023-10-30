@@ -13,6 +13,11 @@ import Products from '../components/components/Products';
 import UserProfile from '../components/components/UserProfile';
 import Login from '../components/pages/Login';
 import UsersList from '../components/components/UsersList';
+import UserOrders from '../components/components/UserOrders';
+import UserProtectedRoute from './UserProtectedRoute';
+import AdminProtectedRoute from './AdminProtectedRoute';
+import Register from '../components/pages/Register';
+
 
 export default function Routing() {
   return (
@@ -20,15 +25,23 @@ export default function Routing() {
     <Navigation/>
         <Routes>
             <Route path="/" element={<Home/>} />
+            <Route path="/Register" element={<Register/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/contact" element={<Contact/>} />
-            <Route path="/admin-dashboard" element={<AdminDashboard/>} />
-            <Route path="/user-dashboard" element={<UserDashboard/>} />
             <Route path="/productDetail" element={<ProductDetails/>} />
-            <Route path="/dashboard/admin/category" element={<Category/>} />
-            <Route path="/dashboard/admin/products" element={<Products/>} />
-            <Route path="/dashboard/admin/userList" element={<UsersList/>} />
-            <Route path="/dashboard/user/Userprofile" element={<UserProfile/>} />
+
+          <Route path='/user-dashboard' element={<UserProtectedRoute/>}>
+            <Route path="user" element={<UserDashboard/>} />
+            <Route path="user/Userprofile" element={<UserProfile/>} />
+            <Route path="user/UserOrders" element={<UserOrders/>} />
+          </Route>
+          
+          <Route path='/admin-dashboard' element={<AdminProtectedRoute/>}>
+            <Route path="admin" element={<AdminDashboard/>} />
+            <Route path="admin/category" element={<Category/>} />
+            <Route path="admin/products" element={<Products/>} />
+            <Route path="admin/userList" element={<UsersList/>} />
+          </Route>
             <Route path="*" element={<Error/>} />
         </Routes>
         <Footer/>
