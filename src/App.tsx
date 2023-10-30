@@ -1,12 +1,17 @@
 import { ProductsManager } from './components/ProductsManager'
-import './App.css'
+import './index.css'
+import Home from './components/pages/Home'
+import { BrowserRouter , Routes, Route } from 'react-router-dom'
+import ProductList from './components/ProductList'
+import Navigation from './components/components/Navigation'
+import Routing  from './routing/Routing'
+
 
 function App() {
   return (
-    <div className="App">
-      <h1>Vite + React + Toolkit + Tailwind</h1>
-      <ProductsManager />
-    </div>
+    <>
+      <Routing/>
+    </>
   )
 }
 

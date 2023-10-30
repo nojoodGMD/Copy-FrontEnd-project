@@ -1,4 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import axios from 'axios'
+import api from '../../../api'
 
 export type Product = {
   id: number
@@ -11,38 +13,41 @@ export type Product = {
 }
 
 export type ProductState = {
-  items: Product[]
+  products: Product[]
   error: null | string
   isLoading: boolean
 }
 
 const initialState: ProductState = {
-  items: [],
+  products: [],
   error: null,
   isLoading: false
 }
 
-export const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {
-    productsRequest: (state) => {
-      state.isLoading = true
-    },
-    productsSuccess: (state, action) => {
-      state.isLoading = false
-      state.items = action.payload
-    },
-    addProduct: (state, action: { payload: { product: Product } }) => {
-      // let's append the new product to the beginning of the array
-      state.items = [action.payload.product, ...state.items]
-    },
-    removeProduct: (state, action: { payload: { productId: number } }) => {
-      const filteredItems = state.items.filter((product) => product.id !== action.payload.productId)
-      state.items = filteredItems
-    }
-  }
+export const fetchProducts = createAsyncThunk('products/fetchProducts',async()=>{
+  const response = await api.get('/mock/e-commerce/products.json')
+  return response.data;
 })
-export const { removeProduct, addProduct, productsRequest, productsSuccess } = userSlice.actions
 
-export default userSlice.reducer
+export const productSlice = createSlice({
+  name: 'products',
+  initialState,
+  reducers: {},
+  extraReducers(builder){
+    builder.addCase(fetchProducts.pending, (state)=>{
+      state.isLoading = true;
+      state.error = null;
+    })
+    builder.addCase(fetchProducts.fulfilled, (state, action)=>{
+      state.products = action.payload;
+      state.isLoading = false;
+    })
+    builder.addCase(fetchProducts.rejected, (state,action)=>{
+      state.error = action.error.message || "Error"
+      state.isLoading = false;
+    })
+  }
+ 
+})
+
+export default productSlice.reducer
