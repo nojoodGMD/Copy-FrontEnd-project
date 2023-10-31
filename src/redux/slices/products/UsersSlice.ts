@@ -21,12 +21,15 @@ export type UserState = {
   userData : null | User
 }
 
+//this code is to save user info when logged in or out using the local storage
+const data = localStorage.getItem("loginData") !== null ? JSON.parse(String(localStorage.getItem('loginData'))) : []
+
 const initialState: UserState = {
   users: [],
   error: null,
   isLoading: false,
-  isLogin:false,
-  userData: null
+  isLogin: data.isLogin,
+  userData: data.userData
 }
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers',async()=>{
@@ -41,10 +44,20 @@ export const UsersSlice = createSlice({
     login:(state,action)=>{
       state.isLogin = true;
       state.userData = action.payload;
+      // Store the login data in the browser
+      localStorage.setItem('loginData',JSON.stringify({
+        isLogin: state.isLogin,
+        userData: state.userData
+      }))
     },
     logout:(state)=>{
       state.isLogin = false;
       state.userData = null;
+      // Remove login data of the data
+      localStorage.setItem('loginData',JSON.stringify({
+        isLogin: state.isLogin,
+        userData: state.userData
+      }))
     }
   },
   extraReducers(builder){

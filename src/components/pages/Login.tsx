@@ -1,10 +1,10 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
-import {useNavigate, useNavigation } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import { AppDispatch, RootState } from '../../redux/store';
 import { fetchUsers, login } from '../../redux/slices/products/UsersSlice';
+
+
 
 export default function Login() {
 
@@ -18,7 +18,6 @@ export default function Login() {
   useEffect(()=>{
     dispatch(fetchUsers())
   },[])
-  
 
 
   const handleSubmit = async(event:FormEvent)=>{
@@ -27,8 +26,7 @@ export default function Login() {
       if(foundUser && foundUser.password === user.password){
         // logged in
         dispatch(login(foundUser))
-        navigate("/")
-        alert("Welcome back "+foundUser.firstName+"!")
+        navigate("/");
       }else{
         alert('Something wrong with email or password')
       }
@@ -44,12 +42,12 @@ export default function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}  >
       <label htmlFor="email">Email:</label>
       <input type="email" name="email" placeholder='Enter email' value={user.email} onChange={handleChange} />
       <label htmlFor="password">Password:</label>
       <input type="password" name="password" placeholder='Enter password' value={user.password} onChange={handleChange}/>
-      <button type='submit'>Login</button>
+      <button type='submit' >Login</button>
     </form>
   )
 }

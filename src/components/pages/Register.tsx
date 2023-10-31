@@ -18,6 +18,10 @@ export default function Register() {
         <Form.Label>Password</Form.Label>
         <Form.Control placeholder="Enter User Name" type='password' />
     </Form.Group>
+    <Form.Group className="mb-3">
+        <Form.Label>Repeat Password</Form.Label>
+        <Form.Control placeholder="Enter User Name" type='password' />
+    </Form.Group>
         <Button type="submit">Register</Button>
     </>
   )

@@ -10,18 +10,21 @@ export type Product = {
   categories: number[]
   variants: string[]
   sizes: string[]
+  price:number
 }
 
 export type ProductState = {
   products: Product[]
   error: null | string
   isLoading: boolean
+  singleProduct: Product
 }
 
 const initialState: ProductState = {
   products: [],
   error: null,
-  isLoading: false
+  isLoading: false,
+  singleProduct: {} as Product
 }
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts',async()=>{
@@ -32,7 +35,15 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts',async()=>
 export const productSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    findProduct : (state,action)=>{
+      const id = action.payload
+      const foundProduct = state.products.find((product)=> id === product.id)
+      if(foundProduct){
+        state.singleProduct = foundProduct;
+      }
+    }
+  },
   extraReducers(builder){
     builder.addCase(fetchProducts.pending, (state)=>{
       state.isLoading = true;
@@ -50,4 +61,5 @@ export const productSlice = createSlice({
  
 })
 
+export const {findProduct} = productSlice.actions;
 export default productSlice.reducer

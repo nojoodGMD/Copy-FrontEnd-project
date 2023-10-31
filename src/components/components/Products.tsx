@@ -43,6 +43,7 @@ if(error){
             <th> </th>
             <th>Product Image</th>
             <th>Name</th>
+            <th>Price</th>
             <th>Description</th>
             <th>Variance</th>
             <th>Sizes</th>
@@ -54,6 +55,7 @@ if(error){
             <td><input type="checkbox" /></td>
             <td><img className='admin__product-img' src={product.image} alt="" /></td>
             <td>{product.name}</td>
+            <td>{product.price}</td>
             <td>{product.description}</td>
             <td>{product.variants}</td>
             <td>{product.sizes}</td>

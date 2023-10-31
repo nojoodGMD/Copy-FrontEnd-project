@@ -28,7 +28,7 @@ export default function Routing() {
             <Route path="/Register" element={<Register/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/contact" element={<Contact/>} />
-            <Route path="/productDetail" element={<ProductDetails/>} />
+            <Route path="/product-details/:id" element={<ProductDetails/>} />
 
           <Route path='/user-dashboard' element={<UserProtectedRoute/>}>
             <Route path="user" element={<UserDashboard/>} />
