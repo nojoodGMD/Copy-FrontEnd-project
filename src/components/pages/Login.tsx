@@ -22,7 +22,7 @@ export default function Login() {
 
   const handleSubmit = async(event:FormEvent)=>{
     event.preventDefault();
-      const foundUser = users.find(userData => userData.email === user.email);
+      const foundUser = users.find(userData => userData.email.toLocaleLowerCase() === user.email.toLocaleLowerCase());
       if(foundUser && foundUser.password === user.password){
         // logged in
         dispatch(login(foundUser))

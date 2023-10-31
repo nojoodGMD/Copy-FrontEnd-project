@@ -145,3 +145,12 @@
 .product-details button:hover{
   background-color: #165cc6;
 }
+
+/* Search bar */
+.home-page__functionality{
+  display: flex;
+  gap: 120px;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0;
+}

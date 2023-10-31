@@ -40,9 +40,8 @@ export default function ProductDetails() {
         <img src={singleProduct.image} alt={singleProduct.name} />
         <p className='product-detail__title'>{singleProduct.name}</p>
         <p className='product-detail__description'>{singleProduct.description}</p>
-        <p>{singleProduct.variants.join(", ")}</p>
+        <p>{singleProduct.variants &&  singleProduct.variants.join(", ")}</p>
         <p className='product-detail__price'>{singleProduct.price} SAR</p>
-        {/* <p>Category: {singleProduct.categories.join(", ")}</p> */}
         <button>Buy</button>
         <button onClick={handleGoBack}>Back to Shopping</button>
       </div>}

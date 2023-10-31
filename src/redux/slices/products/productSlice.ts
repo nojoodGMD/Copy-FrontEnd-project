@@ -18,13 +18,15 @@ export type ProductState = {
   error: null | string
   isLoading: boolean
   singleProduct: Product
+  searchTerm: string
 }
 
 const initialState: ProductState = {
   products: [],
   error: null,
   isLoading: false,
-  singleProduct: {} as Product
+  singleProduct: {} as Product,
+  searchTerm: ''
 }
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts',async()=>{
@@ -41,6 +43,17 @@ export const productSlice = createSlice({
       const foundProduct = state.products.find((product)=> id === product.id)
       if(foundProduct){
         state.singleProduct = foundProduct;
+      }
+    },
+    setSearchTerm:(state,action)=>{
+      state.searchTerm = action.payload
+    },
+    sortProducts:(state,action)=>{
+      const sortingCriteria = action.payload
+      if(sortingCriteria==='price'){
+        state.products.sort((a,b)=>a.price - b.price)
+      }else if(sortingCriteria==='name'){
+        state.products.sort((a,b)=> a.name.localeCompare(b.name))
       }
     }
   },
@@ -61,5 +74,5 @@ export const productSlice = createSlice({
  
 })
 
-export const {findProduct} = productSlice.actions;
+export const {findProduct, setSearchTerm, sortProducts} = productSlice.actions;
 export default productSlice.reducer
