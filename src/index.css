@@ -121,7 +121,6 @@
   right:0; */
   display: flex;
   justify-content: center;
-  margin-top: 10px;
 }
 
 /* search bar */
@@ -157,6 +156,8 @@
   color: var(--admin-user-sidebar-font-color);
   flex: 1;
   padding: 1rem;
+  min-height: 100vh;
+  max-width: 350px;
 
 }
 
@@ -193,6 +194,8 @@
   color: var(--admin-user-sidebar-font-color);
   flex: 1;
   padding: 1rem;
+  min-height: 100vh;
+  max-width: 350px;
 
 }
 

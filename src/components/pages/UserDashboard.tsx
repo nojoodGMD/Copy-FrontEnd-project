@@ -7,7 +7,7 @@ export default function UserDashboard() {
     <div className="main-container">
       <div className='user__container'>
       <UserSidebar/>
-      <div className='user__main-content'>User, main content goes here</div>
+      <div className='user__main-content'>Welcome Back! Choose from sidebar to show data.</div>
     </div>
     </div>
     </>

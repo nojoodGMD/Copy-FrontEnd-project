@@ -16,7 +16,7 @@ export default function UserSidebar() {
 
   return (
     <aside className='user__sidebar'>
-    <h2>User profile goes here</h2>
+    <h2>User Dashboard</h2>
     <div className='adminSidebar__info'>
         <p>Name: {userData?.firstName + ' ' + userData?.lastName}</p>
         <p>Email: {userData?.email}</p>

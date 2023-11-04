@@ -61,8 +61,7 @@ console.log(isLoading)
         if(user.role==='visitor'){
         return(
           <div key={user.id}>
-            
-            <Card>
+            <Card className='m-1'>
             <Card.Header as="h5">User Details</Card.Header>
       <Card.Body>
         <Card.Text>
