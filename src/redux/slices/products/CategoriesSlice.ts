@@ -1,11 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import api from '../../../api'
+import Category from '../../../components/components/Category'
 
 export type Category = {
-  id: number
-  name: string
+
+    id:number
+    name:string
 }
+
+
 
 export type CategoryState = {
   categories: Category[]
@@ -14,7 +18,7 @@ export type CategoryState = {
 }
 
 const initialState: CategoryState = {
-    categories: [],
+  categories: [],
   error: null,
   isLoading: false
 }
@@ -27,7 +31,26 @@ export const fetchCategory = createAsyncThunk('category/fetchCategory',async()=>
 export const CategorySlice = createSlice({
   name: 'category',
   initialState,
-  reducers: {},
+  reducers: {
+    deleteCategory:(state, action)=>{
+      const id = action.payload;
+      const filteredCategories = state.categories.filter((category)=> category.id !== id);
+      if(filteredCategories){
+        state.categories = filteredCategories;
+      }
+  },
+  addCategory:(state,action)=>{
+    const newCategory = {id: new Date().getMilliseconds() , name: action.payload}
+    state.categories.push(newCategory);
+  },
+  editedCategory:(state,action)=>{
+    const id = action.payload.id;
+    const foundCategory = state.categories.find((cat)=> cat.id === id);
+    if(foundCategory){
+      foundCategory.name = action.payload.name;
+    }
+  }
+},
   extraReducers(builder){
     builder.addCase(fetchCategory.pending, (state)=>{
       state.isLoading = true;
@@ -45,4 +68,5 @@ export const CategorySlice = createSlice({
  
 })
 
+export const {deleteCategory, addCategory, editedCategory} = CategorySlice.actions;
 export default CategorySlice.reducer

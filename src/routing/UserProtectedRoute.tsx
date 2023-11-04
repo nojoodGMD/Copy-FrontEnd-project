@@ -6,9 +6,9 @@ import Login from '../components/pages/Login'
 
 export default function UserProtectedRoute() {
 
-    const {isLogin} = useSelector((state : RootState)=> state.usersReducer)
+    const {isLogin, userData} = useSelector((state : RootState)=> state.usersReducer)
 
   return (
-    isLogin ? <Outlet /> : <Login/>
+    isLogin && userData?.role==='visitor' ? <Outlet /> : <Login/>
   )
 }

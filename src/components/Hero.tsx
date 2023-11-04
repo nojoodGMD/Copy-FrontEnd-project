@@ -1,9 +1,11 @@
 
-
 export const Hero = () => {
     return (
-      <div id="hero" className="hero-img">
-        <h1 className="hero-text">Where you can find the best products</h1>
+      <div className="hero-img">
+        <div className="hero-text">
+          <h1>TECHNO</h1>
+          <p>Where you can find the best technological products!</p>
+        </div>
       </div>
     )
   }

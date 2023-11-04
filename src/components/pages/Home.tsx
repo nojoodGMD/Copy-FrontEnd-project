@@ -6,6 +6,8 @@ import { fetchProducts, setSearchTerm, sortProducts } from "../../redux/slices/p
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from "react-router-dom";
+import SearchingItem from "../components/SearchingItem";
+import SortItems from "../components/SortItems";
 
 const Home = ()=>{
 
@@ -16,13 +18,14 @@ const Home = ()=>{
     dispatch(fetchProducts())
     },[])
 
-    const handleChange =(event:ChangeEvent<HTMLInputElement>)=>{
-        dispatch(setSearchTerm(event.target.value))
-    }
 
     const handleSort=(event:ChangeEvent<HTMLSelectElement>)=>{
         dispatch(sortProducts(event.target.value))
     }
+
+    const handleSearch =(event:ChangeEvent<HTMLInputElement>)=>{
+        dispatch(setSearchTerm(event.target.value))
+    } 
 
     const searchedProducts = searchTerm ? products.filter((product)=> 
     product.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()))
@@ -39,20 +42,12 @@ const Home = ()=>{
 
     return(
         <>
+            <div className="main-container">
             <Hero/>
             <main className="home-container">
                 <div className="home-page__functionality">
-                    <div className="home__search">
-                        <label htmlFor="search-product">Search Bar</label>
-                        <input name="search-product" type="text" placeholder="search by name" value={searchTerm} onChange={handleChange} />
-                    </div>
-                    <div className="home__sort">
-                        <label htmlFor="sort-product">Sort By</label>
-                        <select name="sort-product" onChange={handleSort}>
-                            <option value="price" defaultValue="price">Price</option>
-                            <option value="name" >Name</option>
-                        </select>
-                    </div>
+                    <SearchingItem searchTerm={searchTerm} handleSeach={handleSearch}/>
+                    <SortItems handleSort={handleSort}/>
                 </div>
                 <div className="home-main-content">
                     <section className="home__list-of-products">
@@ -80,6 +75,7 @@ const Home = ()=>{
                     
                 </div>
             </main>
+            </div>
             
         </>
     )

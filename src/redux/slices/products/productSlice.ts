@@ -55,6 +55,42 @@ export const productSlice = createSlice({
       }else if(sortingCriteria==='name'){
         state.products.sort((a,b)=> a.name.localeCompare(b.name))
       }
+    },
+    deleteProduct:(state, action)=>{
+      const id = action.payload;
+      const filteredProducts = state.products.filter((product)=> product.id !== id);
+      if(filteredProducts){
+        state.products = filteredProducts;
+      }
+    },
+    addProduct:(state,action)=>{
+      const newProduct = action.payload;
+      state.products.push(newProduct);
+      console.log("added product")
+    },
+    editedProduct:(state,action )=>{
+      const id = action.payload.id;
+      const editedData : Product = action.payload
+      const foundProduct = state.products.find((product)=>product.id === id);
+      if(foundProduct){
+        //split variance into array if found
+        if(editedData.variants && typeof editedData.variants==='string'){
+          editedData.variants = editedData.variants.split(',');
+        }
+        //split sizes into array if found
+        if(editedData.sizes && typeof editedData.sizes==='string'){
+          editedData.sizes = editedData.sizes.split(',');
+        }
+        //Change the state
+        foundProduct.name = editedData.name;
+        foundProduct.image = editedData.image;
+        foundProduct.description = editedData.description;
+        foundProduct.price = Number(editedData.price)
+        //if there is no values inside sizes and varaince, we sign an empty array (I did this because 'editData.size' bacame empty string "" when there is not values)
+        editedData.sizes ==="" ? foundProduct.sizes=[] : foundProduct.sizes = editedData.sizes
+        editedData.sizes ==="" ? foundProduct.sizes=[] : foundProduct.sizes = editedData.sizes
+        
+      }
     }
   },
   extraReducers(builder){
@@ -74,5 +110,5 @@ export const productSlice = createSlice({
  
 })
 
-export const {findProduct, setSearchTerm, sortProducts} = productSlice.actions;
+export const {findProduct, setSearchTerm, sortProducts, deleteProduct,addProduct, editedProduct} = productSlice.actions;
 export default productSlice.reducer

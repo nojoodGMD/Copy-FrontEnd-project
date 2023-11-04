@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
+import { AppDispatch, RootState } from '../../redux/store';
+import { fetchUsers } from '../../redux/slices/products/UsersSlice';
 
 export default function UserSidebar() {
+
+  const {userData} = useSelector((state : RootState) => state.usersReducer);  
+
+  const dispatch: AppDispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(fetchUsers())
+  },[])
+
+
   return (
     <aside className='user__sidebar'>
     <h2>User profile goes here</h2>
     <div className='adminSidebar__info'>
-        <p>Nojood Othman</p>
-        <p>Age : 23</p>
-        <p>NJ@gmail.com</p>
+        <p>Name: {userData?.firstName + ' ' + userData?.lastName}</p>
+        <p>Email: {userData?.email}</p>
     </div>
-    <ul>
+    <ul className='dashboard__links'>
       <li>
         <Link to="/user-dashboard/user/Userprofile">Profile</Link>
         </li>

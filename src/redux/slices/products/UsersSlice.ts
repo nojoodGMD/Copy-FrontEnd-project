@@ -11,6 +11,7 @@ export type User = {
     email: string;
     password: string;
     role: string;
+    blocked : false;
 }
 
 export type UserState = {
@@ -19,6 +20,8 @@ export type UserState = {
   isLoading: boolean
   isLogin: boolean
   userData : null | User
+  searchTerm: string
+  blocked:boolean
 }
 
 //this code is to save user info when logged in or out using the local storage
@@ -29,7 +32,9 @@ const initialState: UserState = {
   error: null,
   isLoading: false,
   isLogin: data.isLogin,
-  userData: data.userData
+  userData: data.userData,
+  searchTerm:'',
+  blocked: false,
 }
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers',async()=>{
@@ -58,6 +63,42 @@ export const UsersSlice = createSlice({
         isLogin: state.isLogin,
         userData: state.userData
       }))
+    },
+    register:(state,action)=>{
+      const newUser = action.payload
+      state.users.push(newUser)
+      // const jsonData = JSON.stringify(newUser);
+      // console.log(jsonData)
+    },
+    searchUser:(state,action)=>{
+      state.searchTerm = action.payload;
+    },
+    deleteUser:(state,action)=>{
+      const filteredUsers = state.users.filter((user)=> user.id !== action.payload);
+      state.users = filteredUsers;
+    },
+    blockUser:(state,action)=>{
+      const foundUser = state.users.find((user)=> user.id === action.payload);
+      if(foundUser){
+        foundUser.blocked = !foundUser.blocked;
+      }
+    },
+    updateUser:(state,action)=>{
+      const {id, firstName, lastName, email} = action.payload
+      // Find the user
+      const foundUser = state.users.find((user)=> user.id === id)
+      // Update data
+      if(foundUser){
+        foundUser.firstName = firstName;
+        foundUser.lastName = lastName;
+        foundUser.email = email;
+        state.userData = foundUser
+        //Also update local data
+        localStorage.setItem('loginData',JSON.stringify({
+          isLogin: state.isLogin,
+          userData: state.userData
+        }))
+      }
     }
   },
   extraReducers(builder){
@@ -66,8 +107,8 @@ export const UsersSlice = createSlice({
       state.error = null;
     })
     builder.addCase(fetchUsers.fulfilled, (state, action)=>{
-      state.users = action.payload;
       state.isLoading = false;
+      state.users = action.payload;
     })
     builder.addCase(fetchUsers.rejected, (state,action)=>{
       state.error = action.error.message || "Error"
@@ -77,5 +118,5 @@ export const UsersSlice = createSlice({
  
 })
 
-export const {login, logout} = UsersSlice.actions;
+export const {login, logout, register, searchUser, deleteUser,blockUser,updateUser} = UsersSlice.actions;
 export default UsersSlice.reducer

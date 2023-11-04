@@ -17,6 +17,7 @@ import UserOrders from '../components/components/UserOrders';
 import UserProtectedRoute from './UserProtectedRoute';
 import AdminProtectedRoute from './AdminProtectedRoute';
 import Register from '../components/pages/Register';
+import AdminOrderList from '../components/pages/AdminOrderList';
 
 
 export default function Routing() {
@@ -35,12 +36,14 @@ export default function Routing() {
             <Route path="user/Userprofile" element={<UserProfile/>} />
             <Route path="user/UserOrders" element={<UserOrders/>} />
           </Route>
+
           
           <Route path='/admin-dashboard' element={<AdminProtectedRoute/>}>
             <Route path="admin" element={<AdminDashboard/>} />
             <Route path="admin/category" element={<Category/>} />
             <Route path="admin/products" element={<Products/>} />
             <Route path="admin/userList" element={<UsersList/>} />
+            <Route path="admin/Orders" element={<AdminOrderList/>} />
           </Route>
             <Route path="*" element={<Error/>} />
         </Routes>
