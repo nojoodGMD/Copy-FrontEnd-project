@@ -18,6 +18,7 @@ import UserProtectedRoute from './UserProtectedRoute';
 import AdminProtectedRoute from './AdminProtectedRoute';
 import Register from '../components/pages/Register';
 import AdminOrderList from '../components/pages/AdminOrderList';
+import Cart from '../components/pages/Cart';
 
 
 export default function Routing() {
@@ -29,6 +30,7 @@ export default function Routing() {
             <Route path="/Register" element={<Register/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/contact" element={<Contact/>} />
+            <Route path="/cart" element={<Cart/>} />
             <Route path="/product-details/:id" element={<ProductDetails/>} />
 
           <Route path='/user-dashboard' element={<UserProtectedRoute/>}>

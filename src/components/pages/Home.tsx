@@ -2,12 +2,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { Hero } from "../Hero"
 import { ChangeEvent, useEffect } from "react";
-import { fetchProducts, setSearchTerm, sortProducts } from "../../redux/slices/products/productSlice";
+import { Product, fetchProducts, setSearchTerm, sortProducts } from "../../redux/slices/products/productSlice";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from "react-router-dom";
 import SearchingItem from "../components/SearchingItem";
 import SortItems from "../components/SortItems";
+import { addToCart } from "../../redux/slices/products/CartSlice";
+import { ToastContainer, toast } from "react-toastify";
 
 const Home = ()=>{
 
@@ -31,6 +33,11 @@ const Home = ()=>{
     product.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()))
     : products;
 
+    const handleAddToCart = (product : Product)=>{
+        dispatch(addToCart(product))
+        toast.success("Product Added to Cart.")
+    }
+
     if(isLoading){
     return <p>Loading ...</p>
     }
@@ -44,6 +51,7 @@ const Home = ()=>{
         <>
             <div className="main-container">
             <Hero/>
+            <ToastContainer />
             <main className="home-container">
                 <div className="home-page__functionality">
                     <SearchingItem searchTerm={searchTerm} handleSeach={handleSearch}/>
@@ -65,7 +73,7 @@ const Home = ()=>{
                                     <Link to={`/product-details/${product.id}`}>
                                         <Button variant="primary" className="home__btn">Show details</Button>
                                     </Link>
-                                    <Button variant="primary" className="home__btn">Buy</Button>
+                                    <Button variant="primary" className="home__btn" onClick={()=>handleAddToCart(product)}>Add to Cart</Button>
                                 </Card.Body>
                                 </Card>
                             </div>

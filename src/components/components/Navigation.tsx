@@ -5,10 +5,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { logout } from "../../redux/slices/products/UsersSlice";
+import CartIcon from "./CartIcon";
 
 const Navigation = ()=>{
 
   const {isLogin , userData} = useSelector((state:RootState)=>state.usersReducer)
+  const {cartItems} = useSelector((state:RootState)=> state.cartReducer)
 
   const dispatch : AppDispatch = useDispatch()
   const handleLogout = ()=>{
@@ -29,6 +31,7 @@ const Navigation = ()=>{
                 {isLogin && <Link to='/' onClick={handleLogout}>Logout</Link>}
               </div>
           </Nav>
+          {isLogin && <Link to="/cart"><CartIcon value={cartItems.length}/></Link>}
         </Container>
       </Navbar>
        
