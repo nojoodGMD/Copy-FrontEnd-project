@@ -88,7 +88,7 @@ export const productSlice = createSlice({
         foundProduct.price = Number(editedData.price)
         //if there is no values inside sizes and varaince, we sign an empty array (I did this because 'editData.size' bacame empty string "" when there is not values)
         editedData.sizes ==="" ? foundProduct.sizes=[] : foundProduct.sizes = editedData.sizes
-        editedData.sizes ==="" ? foundProduct.sizes=[] : foundProduct.sizes = editedData.sizes
+        editedData.variants ==="" ? foundProduct.variants=[] : foundProduct.variants = editedData.variants
         
       }
     }
