@@ -5,6 +5,8 @@ import { AppDispatch, RootState } from '../../redux/store';
 import { fetchUsers, login } from '../../redux/slices/products/UsersSlice';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { toast ,ToastContainer} from 'react-toastify';
+
 
 
 export default function Login() {
@@ -28,9 +30,9 @@ export default function Login() {
         navigate("/");
       }else{
         if(foundUser?.blocked){
-          alert('Your account us blocked, contact the admin.')
+          toast.error("Your account is blocked, contact the admin.")
         }else{
-          alert('Something wrong with email or password')
+          toast.info("Something wrong with email or password")
         }
       }
       
@@ -47,6 +49,7 @@ export default function Login() {
 
   return (
     <div className="main-container">
+      <ToastContainer/>
     <div className='login-form'>
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formBasicEmail">

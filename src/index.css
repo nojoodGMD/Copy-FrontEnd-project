@@ -315,6 +315,10 @@
   justify-content: center;
 }
 
+.validation-msg{
+  color: crimson;
+}
+
 /* Contact us */
 .contact__container{
   width: 80%;
