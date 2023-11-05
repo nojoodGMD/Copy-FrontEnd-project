@@ -26,7 +26,7 @@ const Navigation = ()=>{
                 <Link to='/contact' >Contact</Link>
                 {isLogin && userData?.role === 'visitor' && <Link to='/user-dashboard/user'>User Dashboard</Link>}
                 {isLogin && userData?.role === 'admin' && <Link to='/admin-dashboard/admin'>Admin Dashboard</Link>}
-                {!isLogin && <Link to='/Register' >Register</Link>}
+                {!isLogin && <Link to='/register' >Register</Link>}
                 {!isLogin && <Link to='/login'>Login</Link>}
                 {isLogin && <Link to='/' onClick={handleLogout}>Logout</Link>}
               </div>
