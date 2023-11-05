@@ -145,6 +145,33 @@
   padding-left: 5px;
 }
 
+/* pagination */
+.home__pagination{
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+  gap: 15px;
+}
+
+.home__pagination button{
+  background-color: var(--button-color-light-blue);
+  color: white;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+
+  transition: 0.3s;
+}
+
+.home__pagination button:hover{
+  background-color: var(--button-color-after-hover);
+}
+
+.home__pagination button:disabled{
+  background-color: var(--secondary-sidevar-color);
+  cursor: default;
+}
+
 /* Admin Page styling */
 .admin__container{
   display: flex;
@@ -218,7 +245,7 @@
 /* Home, list of products */
 .home__list-of-products{
  
-  max-width: 1400px;
+  max-width: 1150px;
   justify-content: center;
   align-items: center;
   margin: auto auto;

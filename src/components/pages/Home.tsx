@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
-import { Hero } from "../Hero"
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Product, fetchProducts, setSearchTerm, sortProducts } from "../../redux/slices/products/productSlice";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -10,6 +9,7 @@ import SearchingItem from "../components/SearchingItem";
 import SortItems from "../components/SortItems";
 import { addToCart } from "../../redux/slices/products/CartSlice";
 import { ToastContainer, toast } from "react-toastify";
+import { Hero } from "./Hero";
 
 const Home = ()=>{
 
@@ -19,6 +19,12 @@ const Home = ()=>{
     useEffect(()=>{
     dispatch(fetchProducts())
     },[])
+
+    //Pagination
+    //1. current page number
+    //2. How many items we want to show
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(3); //This will never change, no need for the set function
 
 
     const handleSort=(event:ChangeEvent<HTMLSelectElement>)=>{
@@ -32,6 +38,31 @@ const Home = ()=>{
     const searchedProducts = searchTerm ? products.filter((product)=> 
     product.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()))
     : products;
+
+    //pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage; 
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage; 
+    const currentItems = searchedProducts.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPagesNumber = Math.ceil(searchedProducts.length / itemsPerPage);
+
+    const buttonElements = []
+    for(let i= 2; i<= totalPagesNumber-1; i++){
+        buttonElements.push(<button onClick={()=>handlePageChange(i)}>{i}</button>)
+    }
+
+    const handleNextPage = ()=>{
+        setCurrentPage(currentPage+1)
+    }
+
+    const handlePageChange =(page:number)=>{
+        setCurrentPage(page)
+    }
+
+    const handlePrevPage = ()=>{
+        setCurrentPage(currentPage-1)
+    }
+
 
     const handleAddToCart = (product : Product)=>{
         dispatch(addToCart(product))
@@ -59,7 +90,7 @@ const Home = ()=>{
                 </div>
                 <div className="home-main-content">
                     <section className="home__list-of-products">
-                      {searchedProducts.length>0 && searchedProducts.map((product)=>{
+                      {currentItems.length>0 && currentItems.map((product)=>{
                         return(
                             <div key={product.id} className="home__signel-product">
                                 <Card style={{ width: '18rem' }}>
@@ -83,6 +114,11 @@ const Home = ()=>{
                     
                 </div>
             </main>
+            <div className="home__pagination">
+                <button onClick={handlePrevPage} disabled={currentPage === 1}>Previous</button>
+                {buttonElements}
+                <button onClick={handleNextPage} disabled={currentPage === totalPagesNumber}>Next</button>
+            </div>
             </div>
             
         </>
