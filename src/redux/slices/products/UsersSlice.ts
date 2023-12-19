@@ -61,6 +61,16 @@ export const deleteUser =  async (_id : string) => {
   return response
 }
 
+export const banUser =  async (_id : string) => {
+  const response = await axios.put(`${baseURL}/users/ban/${_id}`)
+  return response
+}
+
+export const unbanUser =  async (_id : string) => {
+  const response = await axios.put(`${baseURL}/users/unban/${_id}`)
+  return response
+}
+
 
 export const UsersSlice = createSlice({
   name: 'users',
@@ -95,12 +105,6 @@ export const UsersSlice = createSlice({
     searchUser: (state, action) => {
       state.searchTerm = action.payload
     },
-    blockUser: (state, action) => {
-      const foundUser = state.users.find((user) => user._id === action.payload)
-      if (foundUser) {
-        foundUser.isBanned = !foundUser.isBanned
-      }
-    },
     updateUser: (state, action) => {
       const { id, name, email } = action.payload
       const foundUser = state.users.find((user) => user._id === id)
@@ -134,12 +138,13 @@ export const UsersSlice = createSlice({
   }
 })
 
-export const { login, logout, register, searchUser, blockUser, updateUser } =
+export const { login, logout, register, searchUser, updateUser } =
   UsersSlice.actions
 export default UsersSlice.reducer
 
 // == notes ===
-// Update: login - logout - register - blockUser - updateUser
+// Update: login - logout - register - updateUser
 // 1. listing users works
 // 2. search users works
 // 3. delete users
+// 4. ban and unban users
