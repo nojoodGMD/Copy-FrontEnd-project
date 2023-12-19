@@ -7,13 +7,14 @@ import Card from 'react-bootstrap/Card'
 import {fetchUsers,searchUser,deleteUser,blockUser} from '../../redux/slices/products/UsersSlice'
 import SearchingItem from './SearchingItem'
 import { ToastContainer, toast } from 'react-toastify'
+import Image from 'react-bootstrap/Image';
 
 export default function UsersList() {
   const { users, searchTerm } = useSelector((state: RootState) => state.usersReducer)
 
   const dispatch: AppDispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchUsers())
+  useEffect(  () => {
+      dispatch(fetchUsers())
   }, [])
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
@@ -22,16 +23,22 @@ export default function UsersList() {
 
   const searchedUser = searchTerm
     ? users.filter((user) =>
-        user.firstName.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
+        user.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
       )
     : users
 
-  const hanleDelete = (id: number) => {
-    dispatch(deleteUser(id))
-    toast.success('User deleted successfully!')
+  const hanleDelete = async (_id: string) => {
+    try{
+      const response = await deleteUser(_id)
+      await dispatch(fetchUsers())
+      toast.success(response.data.message)
+    }catch(error) {
+      toast.error(error)
+    }
+
   }
 
-  const hanleBlock = (id: number) => {
+  const hanleBlock = (id: string) => {
     dispatch(blockUser(id))
     toast.success('Status changed successfully!')
   }
@@ -47,22 +54,23 @@ export default function UsersList() {
           <section className="products">
             {searchedUser.length > 0 &&
               searchedUser.map((user) => {
-                if (user.role === 'visitor') {
+                if (user.isAdmin === false) {
                   return (
-                    <div key={user.id}>
+                    <div key={user._id}>
                       <Card className="m-1">
                         <Card.Header as="h5">User Details</Card.Header>
                         <Card.Body>
-                          <Card.Text>Full Name: {user.firstName + ' ' + user.lastName}</Card.Text>
+                          <Image src={`http://localhost:3002/${user.image}`} className='user-profile-pic' rounded />
+                          <Card.Text>User Name: {user.name}</Card.Text>
                           <Card.Text>User Email: {user.email}</Card.Text>
-                          <Card.Text>User id: {user.id}</Card.Text>
-                          <Button variant="primary" onClick={() => hanleBlock(user.id)}>
-                            {user.blocked ? 'Unblock' : 'Block'}
+                          <Card.Text>User Phone Number: {user.phone}</Card.Text>
+                          <Button variant="primary" onClick={() => hanleBlock(user._id)}>
+                            {user.isBanned ? 'Unblock' : 'Block'}
                           </Button>
                           <Button
                             variant="primary"
                             className="home__btn"
-                            onClick={() => hanleDelete(user.id)}>
+                            onClick={() => hanleDelete(user._id)}>
                             Delete
                           </Button>
                         </Card.Body>

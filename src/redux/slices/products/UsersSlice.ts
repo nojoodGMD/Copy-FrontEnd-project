@@ -1,25 +1,40 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import api from '../../../api'
+import axios from 'axios'
 
-export type User = {
-  id: number
-  firstName: string
-  lastName: string
+import { Order } from './AdminOrderSlice'
+
+// export type oldUser = {
+//   id: number
+//   firstName: string
+//   lastName: string
+//   email: string
+//   password: string
+//   role: string
+//   blocked: false
+// }
+
+export type UserApi = {
+  _id: string
+  name: string
+  isAdmin: boolean
+  isBanned: boolean
   email: string
-  password: string
-  role: string
-  blocked: false
+  image: string
+  phone: string
+  orders: Order[] //update later
 }
 
 export type UserState = {
-  users: User[]
+  users: UserApi[]
   error: null | string
   isLoading: boolean
   isLogin: boolean
-  userData: null | User
+  userData: null | UserApi
   searchTerm: string
   blocked: boolean
 }
+
+export const baseURL = 'http://localhost:3002/api'
 
 const data =
   localStorage.getItem('loginData') !== null
@@ -37,9 +52,15 @@ const initialState: UserState = {
 }
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-  const response = await api.get('/mock/e-commerce/users.json')
-  return response.data
+    const response = await axios.get(`${baseURL}/users`)
+    return response.data.payload.users
 })
+
+export const deleteUser =  async (_id : string) => {
+  const response = await axios.delete(`${baseURL}/users/${_id}`)
+  return response
+}
+
 
 export const UsersSlice = createSlice({
   name: 'users',
@@ -74,22 +95,17 @@ export const UsersSlice = createSlice({
     searchUser: (state, action) => {
       state.searchTerm = action.payload
     },
-    deleteUser: (state, action) => {
-      const filteredUsers = state.users.filter((user) => user.id !== action.payload)
-      state.users = filteredUsers
-    },
     blockUser: (state, action) => {
-      const foundUser = state.users.find((user) => user.id === action.payload)
+      const foundUser = state.users.find((user) => user._id === action.payload)
       if (foundUser) {
-        foundUser.blocked = !foundUser.blocked
+        foundUser.isBanned = !foundUser.isBanned
       }
     },
     updateUser: (state, action) => {
-      const { id, firstName, lastName, email } = action.payload
-      const foundUser = state.users.find((user) => user.id === id)
+      const { id, name, email } = action.payload
+      const foundUser = state.users.find((user) => user._id === id)
       if (foundUser) {
-        foundUser.firstName = firstName
-        foundUser.lastName = lastName
+        foundUser.name = name
         foundUser.email = email
         state.userData = foundUser
         localStorage.setItem(
@@ -118,6 +134,12 @@ export const UsersSlice = createSlice({
   }
 })
 
-export const { login, logout, register, searchUser, deleteUser, blockUser, updateUser } =
+export const { login, logout, register, searchUser, blockUser, updateUser } =
   UsersSlice.actions
 export default UsersSlice.reducer
+
+// == notes ===
+// Update: login - logout - register - blockUser - updateUser
+// 1. listing users works
+// 2. search users works
+// 3. delete users

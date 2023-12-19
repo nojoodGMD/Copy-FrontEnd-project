@@ -216,6 +216,11 @@
   justify-content: space-between;
 }
 
+.user-profile-pic{
+  height: 120px;
+  display: flex;
+}
+
 .user__sidebar{
   background-color: var(--dashboard-sidebar-color);
   color: var(--admin-user-sidebar-font-color);

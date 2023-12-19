@@ -6,5 +6,5 @@ import Login from '../components/pages/Login'
 export default function AdminProtectedRoute() {
   const { isLogin, userData } = useSelector((state: RootState) => state.usersReducer)
 
-  return isLogin && userData?.role === 'admin' ? <Outlet /> : <Login />
+  return isLogin && userData?.isAdmin === true ? <Outlet /> : <Login />
 }
