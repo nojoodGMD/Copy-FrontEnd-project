@@ -3,16 +3,6 @@ import axios from 'axios'
 
 import { Order } from './AdminOrderSlice'
 
-// export type oldUser = {
-//   id: number
-//   firstName: string
-//   lastName: string
-//   email: string
-//   password: string
-//   role: string
-//   blocked: false
-// }
-
 export type UserApi = {
   _id: string
   name: string
@@ -56,6 +46,16 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
     return response.data.payload.users
 })
 
+export const createUser =  async (newUserData : FormData) => {
+  const response = await axios.post(`${baseURL}/users/register`,newUserData)
+  return response
+}
+
+export const activateUser =  async (token : string) => {
+    const response = await axios.post(`${baseURL}/users/activate`,{token})
+    return response.data
+}
+
 export const deleteUser =  async (_id : string) => {
   const response = await axios.delete(`${baseURL}/users/${_id}`)
   return response
@@ -98,10 +98,6 @@ export const UsersSlice = createSlice({
         })
       )
     },
-    register: (state, action) => {
-      const newUser = action.payload
-      state.users.push(newUser)
-    },
     searchUser: (state, action) => {
       state.searchTerm = action.payload
     },
@@ -138,13 +134,15 @@ export const UsersSlice = createSlice({
   }
 })
 
-export const { login, logout, register, searchUser, updateUser } =
+export const { login, logout, searchUser, updateUser } =
   UsersSlice.actions
 export default UsersSlice.reducer
 
 // == notes ===
-// Update: login - logout - register - updateUser
+// Update: login - logout - updateUser
 // 1. listing users works
 // 2. search users works
 // 3. delete users
 // 4. ban and unban users
+// 5. register user
+// 6. activate user

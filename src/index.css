@@ -9,6 +9,13 @@
 
 }
 
+/* Activation */
+.activation-content{
+  text-align: center;
+  margin-top: 200px;
+}
+
+
 /* Navbar */
 .navigation-bar a{
   color: white;

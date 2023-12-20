@@ -16,9 +16,7 @@ export default function UserProfile() {
   const [isUpdate, setIsUpdate] = useState(false)
 
   const [user, setUser] = useState({
-    id: userData?.id,
-    firstName: userData?.firstName,
-    lastName: userData?.lastName,
+    name: userData?.name,
     email: userData?.email
   })
 
@@ -61,18 +59,8 @@ export default function UserProfile() {
                   <Form.Control
                     type="text"
                     placeholder="Enter First Name"
-                    value={user.firstName}
+                    value={user.name}
                     name="firstName"
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter Last Name"
-                    value={user.lastName}
-                    name="lastName"
                     onChange={handleChange}
                   />
                 </Form.Group>
@@ -99,8 +87,7 @@ export default function UserProfile() {
                   <Card.Title>User Profile</Card.Title>
                 </Card.Body>
                 <ListGroup className="list-group-flush">
-                  <ListGroup.Item>First Name: {userData?.firstName}</ListGroup.Item>
-                  <ListGroup.Item>Last Name: {userData?.lastName}</ListGroup.Item>
+                  <ListGroup.Item>User Name: {userData?.name}</ListGroup.Item>
                   <ListGroup.Item>Email: {userData?.email}</ListGroup.Item>
                 </ListGroup>
                 <Button variant="primary" onClick={handleUpdate}>

@@ -18,6 +18,8 @@ import AdminProtectedRoute from './AdminProtectedRoute'
 import Register from '../components/pages/Register'
 import AdminOrderList from '../components/pages/AdminOrderList'
 import Cart from '../components/pages/Cart'
+import ActivateAccount from '../components/pages/ActivateAccount'
+import WrongActivation from '../components/pages/WrongActivation'
 
 export default function Routing() {
   return (
@@ -26,6 +28,8 @@ export default function Routing() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/users/activate/:token" element={<ActivateAccount />} />
+        <Route path="/users/error-activate/:msg" element={<WrongActivation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
