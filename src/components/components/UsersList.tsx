@@ -12,7 +12,8 @@ import {
   searchUser,
   deleteUser,
   banUser,
-  unbanUser
+  unbanUser,
+  changeRole
 } from '../../redux/slices/products/UsersSlice'
 import SearchingItem from './SearchingItem'
 
@@ -39,6 +40,16 @@ export default function UsersList() {
       toast.success(response.data.message)
     } catch (error) {
       toast.error(error)
+    }
+  }
+
+  const handleChangeRole = async (_id : string) => {
+    try {
+      const response = await changeRole(_id)
+      await dispatch(fetchUsers())
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -81,6 +92,12 @@ export default function UsersList() {
                             variant="primary"
                             onClick={() => hanleBan_Unban(user._id, user.isBanned)}>
                             {user.isBanned ? 'Unban' : 'Ban'}
+                          </Button>
+                          <Button
+                            variant="primary"
+                            className="home__btn"
+                            onClick={() => handleChangeRole(user._id)}>
+                            Make admin
                           </Button>
                           <Button
                             variant="primary"

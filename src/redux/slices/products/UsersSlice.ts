@@ -71,6 +71,11 @@ export const unbanUser =  async (_id : string) => {
   return response
 }
 
+export const changeRole =  async (_id : string) => {
+  const response = await axios.put(`${baseURL}/users/changeRole/${_id}`)
+  return response
+}
+
 
 export const UsersSlice = createSlice({
   name: 'users',
