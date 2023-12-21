@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
-import {addCategory,deleteCategory,editedCategory,fetchCategory} from '../../redux/slices/products/CategoriesSlice'
+import {addCategory, deleteCategory,fetchCategory, updateCategory} from '../../redux/slices/products/CategoriesSlice'
 import { ToastContainer, toast } from 'react-toastify'
 import Form from 'react-bootstrap/Form'
 
@@ -15,44 +15,47 @@ export default function Category() {
   const [newCategory, setNewCategory] = useState('')
 
   const [isEdit, setIsEdit] = useState(false)
-  const [editCategory, setEditCategory] = useState({
-    id: 0,
-    name: ''
-  })
+  const [editCategory, setEditCategory] = useState({_id:'',name:''})
 
   const dispatch: AppDispatch = useDispatch()
   useEffect(() => {
     dispatch(fetchCategory())
   }, [])
 
-  const handleDelete = (id: number) => {
-    dispatch(deleteCategory(id))
-    toast.success('Category deleted successfully!')
+  const handleDelete = async (slug : string) => {
+    try {
+      const response = await deleteCategory(slug)
+      await dispatch(fetchCategory())
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNewCategory(event.target.value)
   }
 
-  const handleAdd = () => {
-    dispatch(addCategory(newCategory))
-    setIsAddNewCategory(false)
-    toast.success('Category added successfully!')
-    setNewCategory('')
+  const handleAdd = async (event: FormEvent) => {
+    try {
+      event.preventDefault()
+      const response = await addCategory(newCategory)
+      await dispatch(fetchCategory())
+      setIsAddNewCategory(false)
+      toast.success(response?.data.message)
+      setNewCategory('')
+    } catch (error) {
+      console.log(error)
+    }
+    
   }
 
-  const handleSubmitEdit = (event: FormEvent) => {
-    event.preventDefault()
-    setIsEdit(false)
-    dispatch(editedCategory(editCategory))
-    toast.success('Category Updated Successfully!')
-  }
-
-  const handleOpenEdit = (id: number) => {
+  // Edit Category functions
+  const handleOpenEdit = (_id: string) => {
     setIsEdit(true)
-    const foundCategory = categories.find((cat) => cat.id === id)
+    const foundCategory = categories.find((cat) => cat._id === _id)
     if (foundCategory) {
-      setEditCategory({ id: foundCategory.id, name: foundCategory.name })
+      setEditCategory({ _id: foundCategory._id, name: foundCategory.name })
     }
   }
 
@@ -62,6 +65,19 @@ export default function Category() {
       return { ...prevCat, [name]: value }
     })
   }
+
+  const handleSubmitEdit = async (event: FormEvent) => {
+    try {
+      event.preventDefault()
+      setIsEdit(false)
+      const response = await updateCategory(editCategory._id, editCategory.name)
+      await dispatch(fetchCategory())
+      toast.success(response.data.message)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   if (isLoading) {
     return <p>Loading ...</p>
@@ -124,18 +140,18 @@ export default function Category() {
             {categories.length > 0 &&
               categories.map((category) => {
                 return (
-                  <div key={category.id}>
+                  <div key={category._id}>
                     <Card>
                       <Card.Body>
                         <Card.Title>{category.name}</Card.Title>
-                        <Card.Text>id: {category.id}</Card.Text>
-                        <Button variant="primary" onClick={() => handleOpenEdit(category.id)}>
+                        <Card.Text>slug: {category.slug}</Card.Text>
+                        <Button variant="primary" onClick={() => handleOpenEdit(category._id)}>
                           Edit
                         </Button>
                         <Button
                           variant="primary"
                           className="home__btn"
-                          onClick={() => handleDelete(category.id)}>
+                          onClick={() => handleDelete(category.slug)}>
                           Delete
                         </Button>
                       </Card.Body>

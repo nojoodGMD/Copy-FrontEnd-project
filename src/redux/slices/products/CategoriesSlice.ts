@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import api from '../../../api'
 import Category from '../../../components/components/Category'
+import axios from 'axios'
 
 export type Category = {
-  id: number
+  _id: string
+  slug: string
   name: string
 }
 
@@ -19,34 +20,30 @@ const initialState: CategoryState = {
   isLoading: false
 }
 
+const baseURL = 'http://localhost:3002/api/categories'
+
 export const fetchCategory = createAsyncThunk('category/fetchCategory', async () => {
-  const response = await api.get('/mock/e-commerce/categories.json')
-  return response.data
+  const response = await axios.get(`${baseURL}`)
+  return response.data.payload
 })
+
+export const addCategory = async (name : string) => {
+    const response = await axios.post(`${baseURL}`,{name})
+    return response
+}
+export const deleteCategory = async (slug : string) => {
+    const response = await axios.delete(`${baseURL}/${slug}`)
+    return response
+}
+export const updateCategory = async (_id : string , name : string) => {
+    const response = await axios.put(`${baseURL}/${_id}`,{name})
+    return response
+}
 
 export const CategorySlice = createSlice({
   name: 'category',
   initialState,
-  reducers: {
-    deleteCategory: (state, action) => {
-      const id = action.payload
-      const filteredCategories = state.categories.filter((category) => category.id !== id)
-      if (filteredCategories) {
-        state.categories = filteredCategories
-      }
-    },
-    addCategory: (state, action) => {
-      const newCategory = { id: new Date().getMilliseconds(), name: action.payload }
-      state.categories.push(newCategory)
-    },
-    editedCategory: (state, action) => {
-      const id = action.payload.id
-      const foundCategory = state.categories.find((cat) => cat.id === id)
-      if (foundCategory) {
-        foundCategory.name = action.payload.name
-      }
-    }
-  },
+  reducers: {},
   extraReducers(builder) {
     builder.addCase(fetchCategory.pending, (state) => {
       state.isLoading = true
@@ -63,5 +60,4 @@ export const CategorySlice = createSlice({
   }
 })
 
-export const { deleteCategory, addCategory, editedCategory } = CategorySlice.actions
 export default CategorySlice.reducer
