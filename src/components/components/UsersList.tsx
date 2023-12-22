@@ -81,7 +81,7 @@ export default function UsersList() {
                         <Card.Header as="h5">User Details</Card.Header>
                         <Card.Body>
                           <Image
-                            src={`http://localhost:3002/${user.image}`}
+                            src={user.image}
                             className="user-profile-pic"
                             rounded
                           />

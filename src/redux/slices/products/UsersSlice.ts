@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { Order } from './AdminOrderSlice'
 
-export type UserApi = {
+export type User = {
   _id: string
   name: string
   isAdmin: boolean
@@ -15,11 +15,11 @@ export type UserApi = {
 }
 
 export type UserState = {
-  users: UserApi[]
+  users: User[]
   error: null | string
   isLoading: boolean
   isLogin: boolean
-  userData: null | UserApi
+  userData: null | User
   searchTerm: string
   blocked: boolean
 }
@@ -41,9 +41,10 @@ const initialState: UserState = {
   blocked: false
 }
 
+
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-    const response = await axios.get(`${baseURL}/users`)
-    return response.data.payload.users
+    const response = await axios.get<User[]>(`${baseURL}/users`)
+    return response.data
 })
 
 export const createUser =  async (newUserData : FormData) => {
@@ -130,7 +131,7 @@ export const UsersSlice = createSlice({
     })
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.isLoading = false
-      state.users = action.payload
+      state.users = action.payload.payload.users
     })
     builder.addCase(fetchUsers.rejected, (state, action) => {
       state.error = action.error.message || 'Error'
