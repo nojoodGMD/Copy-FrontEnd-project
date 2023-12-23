@@ -19,6 +19,7 @@ export default function UserProfile() {
   const [isUpdate, setIsUpdate] = useState(false)
 
   const [user, setUser] = useState({
+    _id : userData?._id,
     name: userData?.name,
     email: userData?.email
   })
@@ -41,12 +42,18 @@ export default function UserProfile() {
     })
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    setIsUpdate(false)
-    dispatch(updateUser(user))
-    toast.success('Profile Updated Successfully!')
+  const handleSubmit = async (event: React.FormEvent) => {
+    try {
+      event.preventDefault()
+      setIsUpdate(false)
+      await dispatch(updateUser(user))
+      toast.success("User data updated successfully")  
+    } catch (error) {
+      console.log(error)
+    }
   }
+  
+    
 
   return (
     <div className="main-container">

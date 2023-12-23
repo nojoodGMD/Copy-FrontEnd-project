@@ -55,7 +55,6 @@ export const login = createAsyncThunk('users/login', async (userData:object) => 
     console.log("response login in userslice",response)
     return response.data
   } catch (error) {
-    console.log('error login userslice')
     console.log(error)
   }
     
@@ -64,6 +63,25 @@ export const login = createAsyncThunk('users/login', async (userData:object) => 
 export const logout = createAsyncThunk('users/logout', async () => {
   try {
     const response = await axios.post(`${baseURL}/auth/logout`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+    
+})
+
+export const updateUser =  createAsyncThunk( 'users/updateUser',async (newUserData : object) => {
+  try {
+    await axios.put(`${baseURL}/users/${newUserData._id}`,newUserData)
+    return newUserData;
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+export const getOneUser = createAsyncThunk('users/getOneUser', async (userId : string) => {
+  try {
+    const response = await axios.get(`${baseURL}/users/${userId}`)
     return response.data
   } catch (error) {
     console.log(error)
@@ -103,6 +121,7 @@ export const changeRole =  async (_id : string) => {
 
 
 
+
 export const UsersSlice = createSlice({
   name: 'users',
   initialState,
@@ -110,13 +129,31 @@ export const UsersSlice = createSlice({
     searchUser: (state, action) => {
       state.searchTerm = action.payload
     },
-    updateUser: (state, action) => {
-      const { id, name, email } = action.payload
-      const foundUser = state.users.find((user) => user._id === id)
-      if (foundUser) {
-        foundUser.name = name
-        foundUser.email = email
-        state.userData = foundUser
+    // updateUser: (state, action) => {
+    //   const { id, name, email } = action.payload
+    //   const foundUser = state.users.find((user) => user._id === id)
+    //   if (foundUser) {
+    //     foundUser.name = name
+    //     foundUser.email = email
+    //     state.userData = foundUser
+    //     localStorage.setItem(
+    //       'loginData',
+    //       JSON.stringify({
+    //         isLogin: state.isLogin,
+    //         userData: state.userData
+    //       })
+    //     )
+    //   }
+    // }
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.users = action.payload.payload.users
+    })
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+        state.userData.name = action.payload.name
+        state.userData.email = action.payload.email
         localStorage.setItem(
           'loginData',
           JSON.stringify({
@@ -124,16 +161,21 @@ export const UsersSlice = createSlice({
             userData: state.userData
           })
         )
-      }
-    }
-  },
-  extraReducers(builder) {
-    builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.users = action.payload.payload.users
+      
     })
 
     builder.addCase(login.fulfilled, (state, action) => {
+      state.isLogin = true
+      state.userData = action.payload.payload
+      localStorage.setItem(
+        'loginData',
+        JSON.stringify({
+          isLogin: state.isLogin,
+          userData: state.userData
+        })
+      )
+    })
+    builder.addCase(getOneUser.fulfilled, (state, action) => {
       state.isLogin = true
       state.userData = action.payload.payload
       localStorage.setItem(
@@ -167,14 +209,5 @@ export const UsersSlice = createSlice({
   }
 })
 
-export const { searchUser, updateUser } = UsersSlice.actions
+export const { searchUser } = UsersSlice.actions
 export default UsersSlice.reducer
-
-// == notes ===
-// Update: login - logout - updateUser
-// 1. listing users works
-// 2. search users works
-// 3. delete users
-// 4. ban and unban users
-// 5. register user
-// 6. activate user
