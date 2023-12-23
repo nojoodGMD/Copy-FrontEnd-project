@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import api from '../../../api'
+import axios from 'axios'
+axios.defaults.withCredentials = true
 
 export type Order = {
   id: number

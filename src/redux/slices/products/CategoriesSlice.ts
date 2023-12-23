@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import Category from '../../../components/components/Category'
 import axios from 'axios'
+axios.defaults.withCredentials = true
 
 export type Category = {
   _id: string
