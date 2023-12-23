@@ -16,7 +16,7 @@ export default function UserSidebar() {
     <aside className="user__sidebar">
       <h2>User Dashboard</h2>
       <div className="admin-sidebar__info">
-        <p>Name: {userData?.firstName + ' ' + userData?.lastName}</p>
+        <p>Name: {userData?.name}</p>
         <p>Email: {userData?.email}</p>
       </div>
       <ul className="dashboard__links">

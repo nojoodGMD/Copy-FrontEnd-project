@@ -3,11 +3,14 @@ import UserSidebar from './UserSidebar'
 import Card from 'react-bootstrap/Card'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { useDispatch, useSelector } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify'
+import Image from 'react-bootstrap/Image'
+
+
 import { AppDispatch, RootState } from '../../redux/store'
 import { fetchUsers, updateUser } from '../../redux/slices/products/UsersSlice'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { ToastContainer, toast } from 'react-toastify'
 
 export default function UserProfile() {
   const { userData } = useSelector((state: RootState) => state.usersReducer)
@@ -55,12 +58,12 @@ export default function UserProfile() {
             {isUpdate && (
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
-                  <Form.Label>First Name</Form.Label>
+                  <Form.Label>User name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter First Name"
+                    placeholder="Enter User Name"
                     value={user.name}
-                    name="firstName"
+                    name="name"
                     onChange={handleChange}
                   />
                 </Form.Group>
@@ -85,6 +88,11 @@ export default function UserProfile() {
               <Card style={{ width: '18rem' }}>
                 <Card.Body>
                   <Card.Title>User Profile</Card.Title>
+                  <Image
+                            src={userData?.image}
+                            className="user-profile-pic"
+                            rounded
+                          />
                 </Card.Body>
                 <ListGroup className="list-group-flush">
                   <ListGroup.Item>User Name: {userData?.name}</ListGroup.Item>

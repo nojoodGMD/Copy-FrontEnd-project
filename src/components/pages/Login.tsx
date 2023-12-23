@@ -11,7 +11,7 @@ export default function Login() {
   const navigate = useNavigate()
   const [user, setUser] = useState({ email: '', password: '' })
 
-  const { users } = useSelector((state: RootState) => state.usersReducer)
+  // const { users } = useSelector((state: RootState) => state.usersReducer)
   const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
@@ -19,20 +19,35 @@ export default function Login() {
   }, [])
 
   const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault()
-    const foundUser = users.find(
-      (userData) => userData.email.toLocaleLowerCase() === user.email.toLocaleLowerCase()
-    )
-    if (foundUser && foundUser.password === user.password && !foundUser.blocked) {
-      dispatch(login(foundUser))
-      navigate('/')
-    } else {
-      if (foundUser?.blocked) {
-        toast.error('Your account is blocked, contact the admin.')
-      } else {
-        toast.info('Something wrong with email or password')
+    try {
+      event.preventDefault()
+      if(user.email==='' || user.password===''){
+        toast.error('Please enter both your email and password.')
+        return
       }
+      const response = await dispatch(login(user))
+      toast.success(response.payload.message)
+      navigate('/')
+    } catch (error) {
+      toast.info('Something went wrong, try again.')
+      console.log(error)
     }
+   
+
+    // // use satabase service here
+    // const foundUser = users.find(
+    //   (userData) => userData.email.toLocaleLowerCase() === user.email.toLocaleLowerCase()
+    // )
+    // if (foundUser && foundUser.password === user.password && !foundUser.isBanned) {
+    //   dispatch(login(foundUser))
+    //   navigate('/')
+    // } else {
+    //   if (foundUser?.isBanned) {
+    //     toast.error('Your account is blocked, contact the admin.')
+    //   } else {
+    //     toast.info('Something wrong with email or password')
+    //   }
+    // }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +70,6 @@ export default function Login() {
               value={user.email}
               onChange={handleChange}
             />
-            <Form.Text className="text-muted">
-              We will never share your email with anyone else.
-            </Form.Text>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>

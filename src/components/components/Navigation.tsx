@@ -3,9 +3,10 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useDispatch, useSelector } from "react-redux";
+
 import { AppDispatch, RootState } from "../../redux/store";
-import { logout } from "../../redux/slices/products/UsersSlice";
 import CartIcon from "./CartIcon";
+import { logout } from "../../redux/slices/products/UsersSlice";
 
 const Navigation = ()=>{
 
@@ -24,8 +25,8 @@ const Navigation = ()=>{
               <div className="navigation-bar">
                 <Link to='/' >Home</Link>
                 <Link to='/contact' >Contact</Link>
-                {isLogin && userData?.role === 'visitor' && <Link to='/user-dashboard/user'>User Dashboard</Link>}
-                {isLogin && userData?.role === 'admin' && <Link to='/admin-dashboard/admin'>Admin Dashboard</Link>}
+                {isLogin && userData?.isAdmin === false && <Link to='/user-dashboard/user'>User Dashboard</Link>}
+                {isLogin && userData?.isAdmin === true && <Link to='/admin-dashboard/admin'>Admin Dashboard</Link>}
                 {!isLogin && <Link to='/register' >Register</Link>}
                 {!isLogin && <Link to='/login'>Login</Link>}
                 {isLogin && <Link to='/' onClick={handleLogout}>Logout</Link>}

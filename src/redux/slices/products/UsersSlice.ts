@@ -9,6 +9,7 @@ export type User = {
   isAdmin: boolean
   isBanned: boolean
   email: string
+  password: string
   image: string
   phone: string
   orders: Order[] //update later
@@ -47,6 +48,28 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
     return response.data
 })
 
+export const login = createAsyncThunk('users/login', async (userData:object) => {
+  try {
+    const response = await axios.post(`${baseURL}/auth/login`,userData)
+    console.log("response login in userslice",response)
+    return response.data
+  } catch (error) {
+    console.log('error login userslice')
+    console.log(error)
+  }
+    
+})
+
+export const logout = createAsyncThunk('users/logout', async () => {
+  try {
+    const response = await axios.post(`${baseURL}/auth/logout`)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+    
+})
+
 export const createUser =  async (newUserData : FormData) => {
   const response = await axios.post(`${baseURL}/users/register`,newUserData)
   return response
@@ -78,32 +101,11 @@ export const changeRole =  async (_id : string) => {
 }
 
 
+
 export const UsersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
-    login: (state, action) => {
-      state.isLogin = true
-      state.userData = action.payload
-      localStorage.setItem(
-        'loginData',
-        JSON.stringify({
-          isLogin: state.isLogin,
-          userData: state.userData
-        })
-      )
-    },
-    logout: (state) => {
-      state.isLogin = false
-      state.userData = null
-      localStorage.setItem(
-        'loginData',
-        JSON.stringify({
-          isLogin: state.isLogin,
-          userData: state.userData
-        })
-      )
-    },
     searchUser: (state, action) => {
       state.searchTerm = action.payload
     },
@@ -125,23 +127,46 @@ export const UsersSlice = createSlice({
     }
   },
   extraReducers(builder) {
-    builder.addCase(fetchUsers.pending, (state) => {
-      state.isLoading = true
-      state.error = null
-    })
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.isLoading = false
       state.users = action.payload.payload.users
     })
-    builder.addCase(fetchUsers.rejected, (state, action) => {
+
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.isLogin = true
+      state.userData = action.payload.payload
+      localStorage.setItem(
+        'loginData',
+        JSON.stringify({
+          isLogin: state.isLogin,
+          userData: state.userData
+        })
+      )
+    })
+
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.isLogin = false
+      state.userData = null
+      localStorage.setItem(
+        'loginData',
+        JSON.stringify({
+          isLogin: state.isLogin,
+          userData: state.userData
+        })
+      )
+    })
+    builder.addMatcher((action)=>action.type.endsWith('/rejected'), (state, action) => {
       state.error = action.error.message || 'Error'
       state.isLoading = false
+    })
+    builder.addMatcher((action)=>action.type.endsWith('/pending') ,(state) => {
+      state.isLoading = true
+      state.error = null
     })
   }
 })
 
-export const { login, logout, searchUser, updateUser } =
-  UsersSlice.actions
+export const { searchUser, updateUser } = UsersSlice.actions
 export default UsersSlice.reducer
 
 // == notes ===

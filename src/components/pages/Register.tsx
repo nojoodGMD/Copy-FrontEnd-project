@@ -69,7 +69,6 @@ export default function Register() {
       }
 
       if (!nameError.error && !emailError.error && !passwordError.error && !phoneError.error) {
-        console.log(formData)
         const response = await createUser(formData)
         toast.info(response.data.message)
         setUser(initialState)
