@@ -10,17 +10,16 @@ import { resetPassword } from '../../redux/slices/products/UsersSlice'
 
 export default function ResetPassword() {
   const { token } = useParams()
-  // const nav = useNavigate()
+  const nav = useNavigate()
 
   const [updatedData, setUpdatedData] = useState({ token : token ,password: '' })
 
   const handleUpdatePassword = async (event : FormEvent) => {
     event.preventDefault()
     try {
-        console.log('inside handleUpdatePassword')
         const response = await resetPassword(updatedData)
-        toast.success("Password updated successfully!")
-    //   nav('/login')
+        toast.success(response?.data.message)
+        nav('/login')
     } catch (error) {
         console.log(error)
     }

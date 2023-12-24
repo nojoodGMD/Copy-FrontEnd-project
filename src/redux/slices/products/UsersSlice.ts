@@ -130,10 +130,8 @@ export const forgotPassword =  async (email : object ) => {
 
 export const resetPassword =  async (data : object) => {
   try {
-    console.log(data)
     const response = await axios.put(`${baseURL}/users/reset-password`,data)
-    console.log(response)
-    // return response
+    return response
   } catch (error) {
     console.log(error)
   } 
