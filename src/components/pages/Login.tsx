@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { AppDispatch, RootState } from '../../redux/store'
+import { AppDispatch } from '../../redux/store'
 import { fetchUsers, login } from '../../redux/slices/products/UsersSlice'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
@@ -32,28 +32,16 @@ export default function Login() {
       toast.info('Something went wrong, try again.')
       console.log(error)
     }
-   
-
-    // // use satabase service here
-    // const foundUser = users.find(
-    //   (userData) => userData.email.toLocaleLowerCase() === user.email.toLocaleLowerCase()
-    // )
-    // if (foundUser && foundUser.password === user.password && !foundUser.isBanned) {
-    //   dispatch(login(foundUser))
-    //   navigate('/')
-    // } else {
-    //   if (foundUser?.isBanned) {
-    //     toast.error('Your account is blocked, contact the admin.')
-    //   } else {
-    //     toast.info('Something wrong with email or password')
-    //   }
-    // }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUser((prevState) => {
       return { ...prevState, [event.target.name]: event.target.value }
     })
+  }
+
+  const handleForgetPassword = ()=>{
+    navigate('/forgotPassword')
   }
 
   return (
@@ -81,9 +69,12 @@ export default function Login() {
               onChange={handleChange}
             />
           </Form.Group>
-          <div className="login-form__btn">
+          <div className="login-form__btns">
             <Button variant="primary" type="submit">
               Login
+            </Button>
+            <Button variant="primary" onClick={handleForgetPassword}>
+              Forgot Password
             </Button>
           </div>
         </Form>

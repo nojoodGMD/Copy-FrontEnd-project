@@ -20,6 +20,8 @@ import AdminOrderList from '../components/pages/AdminOrderList'
 import Cart from '../components/pages/Cart'
 import ActivateAccount from '../components/pages/ActivateAccount'
 import WrongActivation from '../components/pages/WrongActivation'
+import ResetPassword from '../components/pages/ResetPassword'
+import ForgotPassword from '../components/pages/ForgotPassword'
 
 export default function Routing() {
   return (
@@ -31,6 +33,8 @@ export default function Routing() {
         <Route path="/users/activate/:token" element={<ActivateAccount />} />
         <Route path="/users/error-activate/:msg" element={<WrongActivation />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/users/reset-password/:token" element={<ResetPassword />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/productDetails/:id" element={<ProductDetails />} />

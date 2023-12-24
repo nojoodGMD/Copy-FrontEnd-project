@@ -76,6 +76,7 @@ export default function Register() {
         return
       }
     } catch (error) {
+      console.log(error)
       toast.error(error.response.data.message)
     }
   }

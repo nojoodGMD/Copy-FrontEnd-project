@@ -116,8 +116,30 @@ export const unbanUser =  async (_id : string) => {
 
 export const changeRole =  async (_id : string) => {
   const response = await axios.put(`${baseURL}/users/changeRole/${_id}`)
-  return response
+  return response.data
 }
+
+export const forgotPassword =  async (email : object ) => {
+  try {
+    const response = await axios.post(`${baseURL}/users/forget-password`,email)
+    return response
+  } catch (error) {
+    console.log(error)
+  } 
+}
+
+export const resetPassword =  async (data : object) => {
+  try {
+    console.log(data)
+    const response = await axios.put(`${baseURL}/users/reset-password`,data)
+    console.log(response)
+    // return response
+  } catch (error) {
+    console.log(error)
+  } 
+}
+
+
 
 
 
@@ -129,22 +151,6 @@ export const UsersSlice = createSlice({
     searchUser: (state, action) => {
       state.searchTerm = action.payload
     },
-    // updateUser: (state, action) => {
-    //   const { id, name, email } = action.payload
-    //   const foundUser = state.users.find((user) => user._id === id)
-    //   if (foundUser) {
-    //     foundUser.name = name
-    //     foundUser.email = email
-    //     state.userData = foundUser
-    //     localStorage.setItem(
-    //       'loginData',
-    //       JSON.stringify({
-    //         isLogin: state.isLogin,
-    //         userData: state.userData
-    //       })
-    //     )
-    //   }
-    // }
   },
   extraReducers(builder) {
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
