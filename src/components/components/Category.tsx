@@ -137,7 +137,7 @@ export default function Category() {
             </Form>
           )}
           <section className="products">
-            {categories.length > 0 &&
+            {categories &&
               categories.map((category) => {
                 return (
                   <div key={category._id}>

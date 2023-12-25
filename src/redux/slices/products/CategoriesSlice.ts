@@ -24,8 +24,13 @@ const initialState: CategoryState = {
 const baseURL = 'http://localhost:3002/api/categories'
 
 export const fetchCategory = createAsyncThunk('category/fetchCategory', async () => {
-  const response = await axios.get(`${baseURL}`)
+  try {
+    const response = await axios.get(`${baseURL}`)
   return response.data.payload
+  } catch (error) {
+    console.log(error)
+  }
+  
 })
 
 export const addCategory = async (name : string) => {

@@ -39,19 +39,19 @@ export default function Routing() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/productDetails/:id" element={<ProductDetails />} />
 
-        {/* <Route path="/user-dashboard" element={<UserProtectedRoute />}> */}
+        <Route path="/user-dashboard" element={<UserProtectedRoute />}>
           <Route path="user" element={<UserDashboard />} />
           <Route path="user/userProfile" element={<UserProfile />} />
           <Route path="user/userOrders" element={<UserOrders />} />
-        {/* </Route> */}
+        </Route>
 
-        {/* <Route path="/admin-dashboard" element={<AdminProtectedRoute />}> */}
+        <Route path="/admin-dashboard" element={<AdminProtectedRoute />}>
           <Route path="admin" element={<AdminDashboard />} />
           <Route path="admin/category" element={<Category />} />
           <Route path="admin/products" element={<Products />} />
           <Route path="admin/userList" element={<UsersList />} />
           <Route path="admin/adminOrderList" element={<AdminOrderList />} />
-        {/* </Route> */}
+        </Route>
         <Route path="*" element={<Error />} />
       </Routes>
       <Footer />
