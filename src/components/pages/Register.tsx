@@ -42,7 +42,6 @@ export default function Register() {
       formData.append('password', user.password)
       formData.append('image', user.image)
       formData.append('phone', user.phone)
-
       //Validation
       if (user.name.length < 3) {
         setNameError({ msg: 'Name must be at least 3 characters.', error: true })
