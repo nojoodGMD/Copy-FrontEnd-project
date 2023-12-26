@@ -120,7 +120,7 @@ export default function Products() {
 
   const getCategoryNameById = (categoryId: string) => {
     const foundCategory = categories.find((cat) => cat._id === categoryId)
-    return foundCategory ? foundCategory.name + ', ' : 'Category not found'
+    return foundCategory ? foundCategory.name + ' ' : 'Category not found'
   }
 
   // const checkedCategories: number[] = []
@@ -364,6 +364,7 @@ export default function Products() {
                           <th>Name</th>
                           <th>Price</th>
                           <th>Description</th>
+                          <th>Quantity</th>
                           <th>Category</th>
                           <th>Delete</th>
                           <th>Edit</th>
@@ -378,8 +379,9 @@ export default function Products() {
                           <td>{product.name}</td>
                           <td>{product.price}</td>
                           <td>{product.description}</td>
+                          <td>{product.quantity}</td>
                           <td>
-                            {getCategoryNameById(product.categoryId)}
+                             {getCategoryNameById(product.categoryId._id)}  
                           </td>
             
                           <td>
