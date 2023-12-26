@@ -1,17 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import api from '../../../api'
 import axios from 'axios'
+import { baseURL } from './UsersSlice'
 axios.defaults.withCredentials = true
 
 export type Product = {
-  id: number
+  _id: string
   name: string
-  image: string
-  description: string
-  categories: number[]
-  variants: string[]
-  sizes: string[]
+  slug: string
   price: number
+  quantity: number
+  sold: number
+  image: string
+  shipping: number
+  description: string
+  categoryId: string
 }
 
 export type ProductState = {
@@ -31,9 +33,24 @@ const initialState: ProductState = {
 }
 
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-  const response = await api.get('/mock/e-commerce/products.json')
-  return response.data
+  try {
+    const response = await axios.get(`${baseURL}/products`)
+    console.log(response.data.payload.products)
+    return response.data.payload.products
+  } catch (error) {
+    console.log(error)
+  }
 })
+
+export const createProduct = async (newProduct: FormData) => {
+  try {
+    const response = await axios.post(`${baseURL}/products`, newProduct)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export const productSlice = createSlice({
   name: 'products',

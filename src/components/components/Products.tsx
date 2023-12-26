@@ -1,14 +1,23 @@
 import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react'
-import AdminSidebar from './AdminSidebar'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '../../redux/store'
-import {fetchProducts,deleteProduct, addProduct, Product, editedProduct} from '../../redux/slices/products/productSlice'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+
+import AdminSidebar from './AdminSidebar'
 import { fetchCategory } from '../../redux/slices/products/CategoriesSlice'
+import { AppDispatch, RootState } from '../../redux/store'
+import {
+  fetchProducts,
+  deleteProduct,
+  addProduct,
+  Product,
+  editedProduct,
+  createProduct
+} from '../../redux/slices/products/productSlice'
+import { validRange } from 'semver'
 
 export default function Products() {
   const { categories } = useSelector((state: RootState) => state.categoryReducer)
@@ -16,17 +25,16 @@ export default function Products() {
   const [isAddProduct, setIsAddProduct] = useState(false)
 
   const initialProduct = {
-    id: new Date().getMilliseconds(),
     name: '',
+    price: 0,
+    quantity: 0,
     image: '',
+    shipping: 0,
     description: '',
-    categories: [],
-    variants: [],
-    sizes: [],
-    price: 0
+    categoryId: ''
   }
 
-  const [newProduct, setNewProduct] = useState<Product>(initialProduct)
+  const [newProduct, setNewProduct] = useState(initialProduct)
 
   const [isEdit, setIsEdit] = useState(false)
   const [editProduct, setEditProduct] = useState({})
@@ -45,34 +53,48 @@ export default function Products() {
     return <p>{error}</p>
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     dispatch(deleteProduct(id))
     toast.success('Product deleted successfully!')
   }
 
-  const handleAddProduct = (event: FormEvent) => {
-    event.preventDefault()
-    dispatch(addProduct(newProduct))
-    setNewProduct(initialProduct)
-    setIsAddProduct(false)
-    ;<ToastContainer />
-    toast.success('Product added successfully!')
+  const handleAddProduct = async (event: FormEvent) => {
+    try {
+      event.preventDefault()
+
+      const formData = new FormData()
+      formData.append('name',newProduct.name)
+      formData.append('image',newProduct.image)
+      formData.append('description',newProduct.description)
+      formData.append('categoryId',newProduct.categoryId)
+      formData.append('price',String(newProduct.price))
+      formData.append('quantity',String(newProduct.quantity))
+      formData.append('shipping',String(newProduct.shipping))
+
+      const response = await createProduct(formData)
+      console.log(response)
+      // setNewProduct(initialProduct)
+      // setIsAddProduct(false)
+      toast.success('Product added successfully!')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
 
-    const isList = name === 'variants' || name === 'sizes'
-    if (isList) {
-      setNewProduct({
-        ...newProduct,
-        [name]: value.split(',')
-      })
-      return
-    }
+    // const isList = name === 'variants' || name === 'sizes'
+    // if (isList) {
+    //   setNewProduct({
+    //     ...newProduct,
+    //     [name]: value.split(',')
+    //   })
+    //   return
+    // }
 
-    const isPrice = name === 'price'
-    if (isPrice) {
+    const isNumber = name === 'price' || name === 'quantity' || name === 'shipping'
+    if (isNumber) {
       setNewProduct({
         ...newProduct,
         [name]: Number(value)
@@ -84,34 +106,44 @@ export default function Products() {
       ...newProduct,
       [name]: value
     })
+
+    console.log(newProduct)
   }
 
-  const getCategoryNameById = (categoryId: number) => {
-    const foundCategory = categories.find((cat) => cat.id === categoryId)
+  const handleCategory = (categoryId: string) => {
+    setNewProduct({
+      ...newProduct,
+      ['categoryId']: categoryId
+    })
+    return
+  }
+
+  const getCategoryNameById = (categoryId: string) => {
+    const foundCategory = categories.find((cat) => cat._id === categoryId)
     return foundCategory ? foundCategory.name + ', ' : 'Category not found'
   }
 
-  const checkedCategories: number[] = []
+  // const checkedCategories: number[] = []
 
-  const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = event.target
-    if (checked && !checkedCategories.includes(Number(value))) {
-      checkedCategories.push(Number(value))
-    }
-    if (!checked && checkedCategories.includes(Number(value))) {
-      const index = checkedCategories.indexOf(Number(value))
-      checkedCategories.splice(index, 1)
-    }
+  // const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value, checked } = event.target
+  //   if (checked && !checkedCategories.includes(Number(value))) {
+  //     checkedCategories.push(Number(value))
+  //   }
+  //   if (!checked && checkedCategories.includes(Number(value))) {
+  //     const index = checkedCategories.indexOf(Number(value))
+  //     checkedCategories.splice(index, 1)
+  //   }
 
-    setNewProduct({
-      ...newProduct,
-      ['categories']: checkedCategories
-    })
-  }
+  //   setNewProduct({
+  //     ...newProduct,
+  //     ['categories']: checkedCategories
+  //   })
+  // }
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     setIsEdit(true)
-    const foundProduct = products.find((product) => product.id === id)
+    const foundProduct = products.find((product) => product._id === id)
     if (foundProduct) {
       setEditProduct(foundProduct)
     }
@@ -195,23 +227,24 @@ export default function Products() {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Variants (Optional)</Form.Label>
+                  <Form.Label>Quantity</Form.Label>
                   <Form.Control
-                    type="text"
-                    name="variants"
-                    value={newProduct.variants}
+                    type="number"
+                    name="quantity"
+                    placeholder="Enter Product Qunatity"
+                    value={newProduct.quantity <= 0 ? '' : newProduct.quantity}
                     onChange={handleChange}
-                    placeholder="Example: 64GB, 128GB"
+                    required
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Sizes (Optional)</Form.Label>
+                  <Form.Label>Shipping Price (Optional)</Form.Label>
                   <Form.Control
-                    type="text"
-                    name="sizes"
-                    value={newProduct.sizes}
+                    type="number"
+                    name="shipping"
+                    placeholder="Enter the price of shipping"
+                    value={newProduct.shipping <= 0 ? '' : newProduct.shipping}
                     onChange={handleChange}
-                    placeholder="Example: big, medium, small"
                   />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -230,13 +263,13 @@ export default function Products() {
                   categories.map((category) => {
                     return (
                       <>
-                        <Form.Group className="mb-3" key={category.id}>
+                        <Form.Group className="mb-3" key={category._id}>
                           <Form.Check
-                            type="checkbox"
-                            name="categories"
-                            value={category.id}
+                            type="radio"
+                            name="categoryId"
+                            value={category._id}
                             label={category.name}
-                            onChange={handleCheckbox}
+                            onChange={() => handleCategory(category._id)}
                           />
                         </Form.Group>
                       </>
@@ -322,25 +355,23 @@ export default function Products() {
             {products.length > 0 &&
               products.map((product) => {
                 return (
-                  <div key={product.id}>
+                  <div key={product._id}>
                     <Table responsive="sm">
                       <thead className="products__table">
                         <tr>
-                          <th>id</th>
+                          <th>Slug</th>
                           <th>Product Image</th>
                           <th>Name</th>
                           <th>Price</th>
                           <th>Description</th>
                           <th>Category</th>
-                          <th>Variance</th>
-                          <th>Sizes</th>
                           <th>Delete</th>
                           <th>Edit</th>
                         </tr>
                       </thead>
                       <tbody className="products__table">
                         <tr>
-                          <td>{product.id}</td>
+                          <td>{product.slug}</td>
                           <td>
                             <img className="admin__product-img" src={product.image} alt="" />
                           </td>
@@ -348,23 +379,20 @@ export default function Products() {
                           <td>{product.price}</td>
                           <td>{product.description}</td>
                           <td>
-                            {product.categories.map((categoryId) =>
-                              getCategoryNameById(categoryId)
-                            )}
+                            {getCategoryNameById(product.categoryId)}
                           </td>
-                          <td>{product.variants.join('\n')}</td>
-                          <td>{product.sizes.length > 0 ? product.sizes.join('\n') : 'none'}</td>
+            
                           <td>
                             <i
                               className="fa-solid fa-trash"
                               id="product-detail__delete"
-                              onClick={() => handleDelete(product.id)}></i>
+                              onClick={() => handleDelete(product._id)}></i>
                           </td>
                           <td>
                             <i
                               className="fa-solid fa-pen-to-square"
                               id="product-detail__edit"
-                              onClick={() => handleEdit(product.id)}></i>{' '}
+                              onClick={() => handleEdit(product._id)}></i>{' '}
                           </td>
                         </tr>
                       </tbody>

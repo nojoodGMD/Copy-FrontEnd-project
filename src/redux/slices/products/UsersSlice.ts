@@ -26,7 +26,7 @@ export type UserState = {
   blocked: boolean
 }
 
-export const baseURL = 'http://localhost:3002/api'
+export const baseURL = 'http://localhost:3002/api' 
 
 const data =
   localStorage.getItem('loginData') !== null
