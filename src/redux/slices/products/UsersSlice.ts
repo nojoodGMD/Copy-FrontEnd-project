@@ -156,6 +156,7 @@ export const UsersSlice = createSlice({
       state.users = action.payload.payload.users
     })
     builder.addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false
         state.userData.name = action.payload.name
         state.userData.email = action.payload.email
         localStorage.setItem(
@@ -169,6 +170,7 @@ export const UsersSlice = createSlice({
     })
 
     builder.addCase(login.fulfilled, (state, action) => {
+      state.isLoading = false
       state.isLogin = true
       state.userData = action.payload.payload
       localStorage.setItem(
@@ -180,6 +182,7 @@ export const UsersSlice = createSlice({
       )
     })
     builder.addCase(getOneUser.fulfilled, (state, action) => {
+      state.isLoading = false
       state.isLogin = true
       state.userData = action.payload.payload
       localStorage.setItem(
@@ -192,6 +195,7 @@ export const UsersSlice = createSlice({
     })
 
     builder.addCase(logout.fulfilled, (state, action) => {
+      state.isLoading = false
       state.isLogin = false
       state.userData = null
       localStorage.setItem(

@@ -12,10 +12,9 @@ import { AppDispatch, RootState } from '../../redux/store'
 import {
   fetchProducts,
   deleteProduct,
-  addProduct,
-  Product,
   editedProduct,
-  createProduct
+  createProduct,
+  Product
 } from '../../redux/slices/products/productSlice'
 import { validRange } from 'semver'
 
@@ -23,18 +22,20 @@ export default function Products() {
   const { categories } = useSelector((state: RootState) => state.categoryReducer)
   const { error, isLoading, products } = useSelector((state: RootState) => state.productsReducer)
   const [isAddProduct, setIsAddProduct] = useState(false)
+  useSelector((state: RootState) => console.log(state.productsReducer))
+
 
   const initialProduct = {
     name: '',
     price: 0,
     quantity: 0,
-    image: '',
+    image: undefined,
     shipping: 0,
     description: '',
     categoryId: ''
   }
 
-  const [newProduct, setNewProduct] = useState(initialProduct)
+  const [newProduct, setNewProduct] = useState<Product>(initialProduct)
 
   const [isEdit, setIsEdit] = useState(false)
   const [editProduct, setEditProduct] = useState({})
@@ -45,6 +46,7 @@ export default function Products() {
     dispatch(fetchCategory())
   }, [])
 
+  console.log(isLoading)
   if (isLoading) {
     return <p>Loading ...</p>
   }
@@ -64,17 +66,18 @@ export default function Products() {
 
       const formData = new FormData()
       formData.append('name',newProduct.name)
-      formData.append('image',newProduct.image)
+      formData.append('image',newProduct.image as Blob)
       formData.append('description',newProduct.description)
       formData.append('categoryId',newProduct.categoryId)
       formData.append('price',String(newProduct.price))
       formData.append('quantity',String(newProduct.quantity))
       formData.append('shipping',String(newProduct.shipping))
+      // for (const [key,value] of formData){console.log(key, value)}
 
       const response = await createProduct(formData)
       console.log(response)
-      // setNewProduct(initialProduct)
-      // setIsAddProduct(false)
+      setNewProduct(initialProduct)
+      setIsAddProduct(false)
       toast.success('Product added successfully!')
     } catch (error) {
       console.log(error)
@@ -82,18 +85,16 @@ export default function Products() {
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target
+    // const { name, value } = event.target
+    const { name, value, type } = event.target
 
-    // const isList = name === 'variants' || name === 'sizes'
-    // if (isList) {
-    //   setNewProduct({
-    //     ...newProduct,
-    //     [name]: value.split(',')
-    //   })
-    //   return
-    // }
-
-    const isNumber = name === 'price' || name === 'quantity' || name === 'shipping'
+    if (type === 'file') {
+      const fileInput = event.target as HTMLInputElement
+      setNewProduct((prevProduct) => {
+        return { ...prevProduct, [name]: fileInput.files?.[0] } // optional chaining ?.
+      })
+    }else{
+      const isNumber = name === 'price' || name === 'quantity' || name === 'shipping'
     if (isNumber) {
       setNewProduct({
         ...newProduct,
@@ -106,8 +107,7 @@ export default function Products() {
       ...newProduct,
       [name]: value
     })
-
-    console.log(newProduct)
+    }
   }
 
   const handleCategory = (categoryId: string) => {
@@ -123,23 +123,6 @@ export default function Products() {
     return foundCategory ? foundCategory.name + ' ' : 'Category not found'
   }
 
-  // const checkedCategories: number[] = []
-
-  // const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value, checked } = event.target
-  //   if (checked && !checkedCategories.includes(Number(value))) {
-  //     checkedCategories.push(Number(value))
-  //   }
-  //   if (!checked && checkedCategories.includes(Number(value))) {
-  //     const index = checkedCategories.indexOf(Number(value))
-  //     checkedCategories.splice(index, 1)
-  //   }
-
-  //   setNewProduct({
-  //     ...newProduct,
-  //     ['categories']: checkedCategories
-  //   })
-  // }
 
   const handleEdit = (id: string) => {
     setIsEdit(true)
@@ -210,7 +193,7 @@ export default function Products() {
                   <Form.Control
                     type="file"
                     name="image"
-                    value={newProduct.image}
+                    // value={newProduct.image string}ring} string}
                     onChange={handleChange}
                     required
                   />
@@ -282,7 +265,7 @@ export default function Products() {
               </Form>
             </>
           )}
-          {isEdit && (
+          {/* {isEdit && (
             <Form onSubmit={handleEditSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Product Name</Form.Label>
@@ -328,7 +311,7 @@ export default function Products() {
                 Submit
               </Button>
             </Form>
-          )}
+          )} */}
 
           <h2>List of products</h2>
           <section>
@@ -354,7 +337,7 @@ export default function Products() {
                         <tr>
                           <td>{product.slug}</td>
                           <td>
-                            <img className="admin__product-img" src={product.image} alt="" />
+                            <img className="admin__product-img" src={product.image as string} alt={product.name} />
                           </td>
                           <td>{product.name}</td>
                           <td>{product.price}</td>

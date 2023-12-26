@@ -4,13 +4,13 @@ import { baseURL } from './UsersSlice'
 axios.defaults.withCredentials = true
 
 export type Product = {
-  _id: string
+  _id?: string
   name: string
-  slug: string
+  slug?: string
   price: number
   quantity: number
-  sold: number
-  image: string
+  sold?: number
+  image: string | File | undefined
   shipping: number
   description: string
   categoryId: string
@@ -131,19 +131,25 @@ export const productSlice = createSlice({
     }
   },
   extraReducers(builder) {
-    builder.addCase(fetchProducts.fulfilled, (state, action) => {
-      state.products = action.payload
-      state.isLoading = false
-    })
-    builder.addCase(getSignleProdct.fulfilled, (state, action) => {
-      console.log(action.payload)
-      state.products = action.payload
-      state.isLoading = false
-    })
-    builder.addMatcher((action)=>action.type.endsWith('/pending'), (state) => {
+    builder.addCase(fetchProducts.pending, (state, action) => {
+      console.log('inside pending product')
       state.isLoading = true
       state.error = null
     })
+    builder.addCase(fetchProducts.fulfilled, (state, action) => {
+      console.log('inside fulfil product')
+      state.isLoading = false
+      state.products = action.payload
+    })
+    builder.addCase(getSignleProdct.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.products = action.payload
+    })
+    // builder.addMatcher((action)=>action.type.endsWith('/pending'), (state) => {
+    //   console.log('inside pending product')
+    //   state.isLoading = true
+    //   state.error = null
+    // })
     builder.addMatcher((action)=>action.type.endsWith('/rejected'), (state, action) => {
       state.error = action.error.message || 'Error'
       state.isLoading = false
