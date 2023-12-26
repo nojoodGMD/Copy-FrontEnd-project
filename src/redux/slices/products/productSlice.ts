@@ -51,6 +51,16 @@ export const getSignleProdct = createAsyncThunk('products/getSignleProdct', asyn
   }
 })
 
+export const deleteProduct = createAsyncThunk('products/deleteProduct', async (slug : string) => {
+  try {
+    const response = await axios.delete(`${baseURL}/products/${slug}`)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 export const createProduct = async (newProduct: FormData) => {
   try {
     const response = await axios.post(`${baseURL}/products`, newProduct)
@@ -95,17 +105,6 @@ export const productSlice = createSlice({
         state.products.sort((a, b) => a.name.localeCompare(b.name))
       }
     },
-    deleteProduct: (state, action) => {
-      const id = action.payload
-      const filteredProducts = state.products.filter((product) => product.id !== id)
-      if (filteredProducts) {
-        state.products = filteredProducts
-      }
-    },
-    addProduct: (state, action) => {
-      const newProduct = action.payload
-      state.products.push(newProduct)
-    },
     editedProduct: (state, action) => {
       const id = action.payload.id
       const editedData: Product = action.payload
@@ -132,12 +131,10 @@ export const productSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(fetchProducts.pending, (state, action) => {
-      console.log('inside pending product')
       state.isLoading = true
       state.error = null
     })
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
-      console.log('inside fulfil product')
       state.isLoading = false
       state.products = action.payload
     })
@@ -145,11 +142,9 @@ export const productSlice = createSlice({
       state.isLoading = false
       state.products = action.payload
     })
-    // builder.addMatcher((action)=>action.type.endsWith('/pending'), (state) => {
-    //   console.log('inside pending product')
-    //   state.isLoading = true
-    //   state.error = null
-    // })
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      state.products = action.payload.payload
+    })
     builder.addMatcher((action)=>action.type.endsWith('/rejected'), (state, action) => {
       state.error = action.error.message || 'Error'
       state.isLoading = false
@@ -161,8 +156,6 @@ export const {
   findProduct,
   setSearchTerm,
   sortProducts,
-  deleteProduct,
-  addProduct,
-  editedProduct
+  editedProduct,
 } = productSlice.actions
 export default productSlice.reducer

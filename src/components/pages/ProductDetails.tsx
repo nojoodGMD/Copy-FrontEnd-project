@@ -51,7 +51,7 @@ export default function ProductDetails() {
         <h2 className="product-details__header">Product details</h2>
         {singleProduct && (
           <div className="product-details">
-            <img src={singleProduct.image} alt={singleProduct.name} />
+            <img src={singleProduct.image as string} alt={singleProduct.name as string} />
             <p className="product-detail__title">{singleProduct.name}</p>
             <p className="product-detail__description">{singleProduct.description}</p>
             <p>

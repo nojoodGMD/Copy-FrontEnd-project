@@ -16,14 +16,11 @@ import {
   createProduct,
   Product
 } from '../../redux/slices/products/productSlice'
-import { validRange } from 'semver'
 
 export default function Products() {
   const { categories } = useSelector((state: RootState) => state.categoryReducer)
   const { error, isLoading, products } = useSelector((state: RootState) => state.productsReducer)
   const [isAddProduct, setIsAddProduct] = useState(false)
-  useSelector((state: RootState) => console.log(state.productsReducer))
-
 
   const initialProduct = {
     name: '',
@@ -46,7 +43,6 @@ export default function Products() {
     dispatch(fetchCategory())
   }, [])
 
-  console.log(isLoading)
   if (isLoading) {
     return <p>Loading ...</p>
   }
@@ -55,9 +51,13 @@ export default function Products() {
     return <p>{error}</p>
   }
 
-  const handleDelete = (id: string) => {
-    dispatch(deleteProduct(id))
-    toast.success('Product deleted successfully!')
+  const handleDelete = async (slug: string) => {
+    try {
+      const response =  await dispatch(deleteProduct(slug))
+      toast.success(response.payload.message)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleAddProduct = async (event: FormEvent) => {
@@ -351,7 +351,7 @@ export default function Products() {
                             <i
                               className="fa-solid fa-trash"
                               id="product-detail__delete"
-                              onClick={() => handleDelete(product._id)}></i>
+                              onClick={() => handleDelete(String(product.slug))}></i>
                           </td>
                           <td>
                             <i
