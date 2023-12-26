@@ -35,8 +35,17 @@ const initialState: ProductState = {
 export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
   try {
     const response = await axios.get(`${baseURL}/products`)
-    console.log(response.data.payload.products)
     return response.data.payload.products
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+export const getSignleProdct = createAsyncThunk('products/getSignleProdct', async (slug : string) => {
+  try {
+    const response = await axios.get(`${baseURL}/productDetails/${slug}`)
+    console.log(response.data)
+    return response.data
   } catch (error) {
     console.log(error)
   }
@@ -51,14 +60,26 @@ export const createProduct = async (newProduct: FormData) => {
     console.log(error)
   }
 }
+export const getOneProduct = async (slug: string) => {
+  try {
+    const response = await axios.get(`${baseURL}/productDetails/${slug}`)
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 
 export const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
     findProduct: (state, action) => {
-      const id = action.payload
-      const foundProduct = state.products.find((product) => id === product.id)
+      const slug = action.payload
+      console.log(action)
+      const foundProduct = state.products.find((product) => slug === product.slug)
       if (foundProduct) {
         state.singleProduct = foundProduct
       }
@@ -110,15 +131,20 @@ export const productSlice = createSlice({
     }
   },
   extraReducers(builder) {
-    builder.addCase(fetchProducts.pending, (state) => {
-      state.isLoading = true
-      state.error = null
-    })
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
       state.products = action.payload
       state.isLoading = false
     })
-    builder.addCase(fetchProducts.rejected, (state, action) => {
+    builder.addCase(getSignleProdct.fulfilled, (state, action) => {
+      console.log(action.payload)
+      state.products = action.payload
+      state.isLoading = false
+    })
+    builder.addMatcher((action)=>action.type.endsWith('/pending'), (state) => {
+      state.isLoading = true
+      state.error = null
+    })
+    builder.addMatcher((action)=>action.type.endsWith('/rejected'), (state, action) => {
       state.error = action.error.message || 'Error'
       state.isLoading = false
     })

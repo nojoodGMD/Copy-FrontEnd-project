@@ -37,7 +37,7 @@ export default function Routing() {
         <Route path="/users/reset-password/:token" element={<ResetPassword />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/productDetails/:id" element={<ProductDetails />} />
+        <Route path="/productDetails/:slug" element={<ProductDetails />} />
 
         <Route path="/user-dashboard" element={<UserProtectedRoute />}>
           <Route path="user" element={<UserDashboard />} />

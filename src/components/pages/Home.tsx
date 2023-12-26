@@ -90,7 +90,7 @@ const Home = () => {
               {currentItems.length > 0 &&
                 currentItems.map((product) => {
                   return (
-                    <div key={product.id} className="home__signel-product">
+                    <div key={product._id} className="home__signel-product">
                       <Card style={{ width: '18rem' }}>
                         <Card.Img variant="top" className="home__product-img" src={product.image} />
                         <Card.Body>
@@ -99,7 +99,7 @@ const Home = () => {
                             {product.price} SAR
                           </Card.Subtitle>
                           <Card.Text>{product.description}</Card.Text>
-                          <Link to={`/productDetails/${product.id}`}>
+                          <Link to={`/productDetails/${product.slug}`}>
                             <Button variant="primary" className="home__btn">
                               Show details
                             </Button>

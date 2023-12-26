@@ -297,10 +297,9 @@ export default function Products() {
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Product Image</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="file"
                   name="image"
                   placeholder="Enter Image URL"
-                  value={editProduct.image}
                   onChange={handleEditChange}
                 />
               </Form.Group>
@@ -315,26 +314,6 @@ export default function Products() {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Variants (Optional)</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="variants"
-                  value={editProduct.variants}
-                  placeholder="Example: 64GB, 128GB"
-                  onChange={handleEditChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Sizes (Optional)</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="sizes"
-                  value={editProduct.sizes}
-                  placeholder="Example: big, medium, small"
-                  onChange={handleEditChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Price</Form.Label>
                 <Form.Control
                   type="number"
@@ -344,6 +323,7 @@ export default function Products() {
                   onChange={handleEditChange}
                 />
               </Form.Group>
+              
               <Button variant="primary" type="submit">
                 Submit
               </Button>

@@ -9,7 +9,7 @@ import { addToCart } from '../../redux/slices/products/CartSlice'
 
 export default function ProductDetails() {
   const navigate = useNavigate()
-  const { id } = useParams()
+  const { slug } = useParams()
 
   const { error, isLoading, singleProduct } = useSelector(
     (state: RootState) => state.productsReducer
@@ -18,7 +18,7 @@ export default function ProductDetails() {
 
   const dispatch: AppDispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchProducts()).then(() => dispatch(findProduct(Number(id))))
+    dispatch(fetchProducts()).then(() => dispatch(findProduct(String(slug))))
     dispatch(fetchCategory())
   }, [])
 
@@ -34,9 +34,9 @@ export default function ProductDetails() {
     navigate('/')
   }
 
-  const getCategoryNameById = (categoryId: number) => {
-    const foundCategory = categories.find((cat) => cat.id === categoryId)
-    return foundCategory ? foundCategory.name + ', ' : 'Category not found'
+  const getCategoryNameById = (categoryId: string) => {
+    const foundCategory = categories.find((cat) => cat._id === categoryId._id)
+    return foundCategory ? foundCategory.name + ' ' : 'Category not found'
   }
 
   const handleAddToCart = (product: Product) => {
@@ -54,10 +54,8 @@ export default function ProductDetails() {
             <img src={singleProduct.image} alt={singleProduct.name} />
             <p className="product-detail__title">{singleProduct.name}</p>
             <p className="product-detail__description">{singleProduct.description}</p>
-            <p>{singleProduct.variants && singleProduct.variants.join(', ')}</p>
             <p>
-              {singleProduct.categories &&
-                singleProduct.categories.map((categoryId) => getCategoryNameById(categoryId))}
+             Category: {singleProduct.categoryId && getCategoryNameById(singleProduct.categoryId)}
             </p>
             <p className="product-detail__price">{singleProduct.price} SAR</p>
             <button onClick={() => handleAddToCart(singleProduct)}>Add to Cart</button>
