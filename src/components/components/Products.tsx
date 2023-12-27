@@ -35,7 +35,7 @@ export default function Products() {
   const [newProduct, setNewProduct] = useState<Product>(initialProduct)
 
   const [isEdit, setIsEdit] = useState(false)
-  const [editProduct, setEditProduct] = useState({})
+  const [editProduct, setEditProduct] = useState({name: '', description:'',price: 0, quantity: 0 })
 
   const dispatch: AppDispatch = useDispatch()
   useEffect(() => {
@@ -337,7 +337,7 @@ export default function Products() {
                           <td>{product.price}</td>
                           <td>{product.description}</td>
                           <td>{product.quantity}</td>
-                          <td>{getCategoryNameById(product.categoryId._id)}</td>
+                          <td>{getCategoryNameById(product.categoryId)}</td>
 
                           <td>
                             <i

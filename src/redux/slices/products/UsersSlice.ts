@@ -53,7 +53,6 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
 export const login = createAsyncThunk('users/login', async (userData:object) => {
   try {
     const response = await axios.post(`${baseURL}/auth/login`,userData)
-    console.log("response login in userslice",response)
     return response.data
   } catch (error) {
     console.log(error)
