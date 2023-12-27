@@ -117,11 +117,6 @@ export default function Products() {
     return
   }
 
-  const getCategoryNameById = (categoryId: string) => {
-    const foundCategory = categories.find((cat) => cat._id === categoryId)
-    return foundCategory ? foundCategory.name + ' ' : 'Category not found'
-  }
-
   const handleEdit = (id: string) => {
     setIsEdit(true)
     const foundProduct = products.find((product) => product._id === id)
@@ -318,7 +313,6 @@ export default function Products() {
                           <th>Price</th>
                           <th>Description</th>
                           <th>Quantity</th>
-                          <th>Category</th>
                           <th>Delete</th>
                           <th>Edit</th>
                         </tr>
@@ -337,8 +331,6 @@ export default function Products() {
                           <td>{product.price}</td>
                           <td>{product.description}</td>
                           <td>{product.quantity}</td>
-                          <td>{getCategoryNameById(product.categoryId)}</td>
-
                           <td>
                             <i
                               className="fa-solid fa-trash"
