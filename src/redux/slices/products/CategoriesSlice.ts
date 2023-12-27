@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import Category from '../../../components/components/Category'
 import axios from 'axios'
+
+import Category from '../../../components/components/Category'
+
 axios.defaults.withCredentials = true
 
 export type Category = {
@@ -26,24 +28,23 @@ const baseURL = 'http://localhost:3002/api/categories'
 export const fetchCategory = createAsyncThunk('category/fetchCategory', async () => {
   try {
     const response = await axios.get(`${baseURL}`)
-  return response.data.payload
+    return response.data.payload
   } catch (error) {
     console.log(error)
   }
-  
 })
 
-export const addCategory = async (name : string) => {
-    const response = await axios.post(`${baseURL}`,{name})
-    return response
+export const addCategory = async (name: string) => {
+  const response = await axios.post(`${baseURL}`, { name })
+  return response
 }
-export const deleteCategory = async (slug : string) => {
-    const response = await axios.delete(`${baseURL}/${slug}`)
-    return response
+export const deleteCategory = async (slug: string) => {
+  const response = await axios.delete(`${baseURL}/${slug}`)
+  return response
 }
-export const updateCategory = async (_id : string , name : string) => {
-    const response = await axios.put(`${baseURL}/${_id}`,{name})
-    return response
+export const updateCategory = async (_id: string, name: string) => {
+  const response = await axios.put(`${baseURL}/${_id}`, { name })
+  return response
 }
 
 export const CategorySlice = createSlice({

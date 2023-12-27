@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-axios.defaults.withCredentials = true
 
 import { Order } from './AdminOrderSlice'
+
+axios.defaults.withCredentials = true
 
 export type User = {
   _id: string

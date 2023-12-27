@@ -39,11 +39,11 @@ export default function UsersList() {
       await dispatch(fetchUsers())
       toast.success(response.data.message)
     } catch (error) {
-      toast.error(error)
+      console.log(error)
     }
   }
 
-  const handleChangeRole = async (_id : string) => {
+  const handleChangeRole = async (_id: string) => {
     try {
       const response = await changeRole(_id)
       await dispatch(fetchUsers())
@@ -59,7 +59,7 @@ export default function UsersList() {
       toast.success(response.data.message)
       await dispatch(fetchUsers())
     } catch (error) {
-      toast.error(error)
+      console.log(error)
     }
   }
 
@@ -80,11 +80,7 @@ export default function UsersList() {
                       <Card className="m-1">
                         <Card.Header as="h5">User Details</Card.Header>
                         <Card.Body>
-                          <Image
-                            src={user.image}
-                            className="user-profile-pic"
-                            rounded
-                          />
+                          <Image src={user.image} className="user-profile-pic" rounded />
                           <Card.Text>User Name: {user.name}</Card.Text>
                           <Card.Text>User Email: {user.email}</Card.Text>
                           <Card.Text>User Phone Number: {user.phone}</Card.Text>

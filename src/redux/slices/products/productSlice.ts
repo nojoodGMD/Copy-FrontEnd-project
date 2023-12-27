@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+
 import { baseURL } from './UsersSlice'
+
 axios.defaults.withCredentials = true
 
 export type Product = {
@@ -41,17 +43,20 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
   }
 })
 
-export const getSignleProdct = createAsyncThunk('products/getSignleProdct', async (slug : string) => {
-  try {
-    const response = await axios.get(`${baseURL}/productDetails/${slug}`)
-    console.log(response.data)
-    return response.data
-  } catch (error) {
-    console.log(error)
+export const getSignleProdct = createAsyncThunk(
+  'products/getSignleProdct',
+  async (slug: string) => {
+    try {
+      const response = await axios.get(`${baseURL}/productDetails/${slug}`)
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
   }
-})
+)
 
-export const deleteProduct = createAsyncThunk('products/deleteProduct', async (slug : string) => {
+export const deleteProduct = createAsyncThunk('products/deleteProduct', async (slug: string) => {
   try {
     const response = await axios.delete(`${baseURL}/products/${slug}`)
     console.log(response.data)
@@ -61,9 +66,9 @@ export const deleteProduct = createAsyncThunk('products/deleteProduct', async (s
   }
 })
 
-export const updateProduct = createAsyncThunk('products/updateProduct', async ( newData : object) => {
+export const updateProduct = createAsyncThunk('products/updateProduct', async (newData: object) => {
   try {
-    const response = await axios.put(`${baseURL}/products/${newData.slug}`,newData)
+    const response = await axios.put(`${baseURL}/products/${newData.slug}`, newData)
     return response.data.payload
   } catch (error) {
     console.log(error)
@@ -89,8 +94,6 @@ export const getOneProduct = async (slug: string) => {
   }
 }
 
-
-
 export const productSlice = createSlice({
   name: 'products',
   initialState,
@@ -113,7 +116,7 @@ export const productSlice = createSlice({
       } else if (sortingCriteria === 'name') {
         state.products.sort((a, b) => a.name.localeCompare(b.name))
       }
-    },
+    }
   },
   extraReducers(builder) {
     builder.addCase(fetchProducts.pending, (state) => {
@@ -135,16 +138,15 @@ export const productSlice = createSlice({
     builder.addCase(deleteProduct.fulfilled, (state, action) => {
       state.products = action.payload.payload
     })
-    builder.addMatcher((action)=>action.type.endsWith('/rejected'), (state, action) => {
-      state.error = action.error.message || 'Error'
-      state.isLoading = false
-    })
+    builder.addMatcher(
+      (action) => action.type.endsWith('/rejected'),
+      (state, action) => {
+        state.error = action.error.message || 'Error'
+        state.isLoading = false
+      }
+    )
   }
 })
 
-export const {
-  findProduct,
-  setSearchTerm,
-  sortProducts,
-} = productSlice.actions
+export const { findProduct, setSearchTerm, sortProducts } = productSlice.actions
 export default productSlice.reducer

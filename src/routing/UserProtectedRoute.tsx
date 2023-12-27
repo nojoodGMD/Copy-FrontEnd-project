@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
 import { Outlet } from 'react-router-dom'
+
+import { RootState } from '../redux/store'
 import Login from '../components/pages/Login'
 
 export default function UserProtectedRoute() {

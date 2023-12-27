@@ -1,12 +1,18 @@
 import { useEffect, useState, ChangeEvent, FormEvent } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
 import AdminSidebar from './AdminSidebar'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '../../redux/store'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
-import {addCategory, deleteCategory,fetchCategory, updateCategory} from '../../redux/slices/products/CategoriesSlice'
-import { ToastContainer, toast } from 'react-toastify'
 import Form from 'react-bootstrap/Form'
+
+import {
+  addCategory,
+  deleteCategory,
+  fetchCategory,
+  updateCategory
+} from '../../redux/slices/products/CategoriesSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '../../redux/store'
 
 export default function Category() {
   const { error, isLoading, categories } = useSelector((state: RootState) => state.categoryReducer)
@@ -15,14 +21,14 @@ export default function Category() {
   const [newCategory, setNewCategory] = useState('')
 
   const [isEdit, setIsEdit] = useState(false)
-  const [editCategory, setEditCategory] = useState({_id:'',name:''})
+  const [editCategory, setEditCategory] = useState({ _id: '', name: '' })
 
   const dispatch: AppDispatch = useDispatch()
   useEffect(() => {
     dispatch(fetchCategory())
   }, [])
 
-  const handleDelete = async (slug : string) => {
+  const handleDelete = async (slug: string) => {
     try {
       const response = await deleteCategory(slug)
       await dispatch(fetchCategory())
@@ -47,7 +53,6 @@ export default function Category() {
     } catch (error) {
       console.log(error)
     }
-    
   }
 
   // Edit Category functions
@@ -77,7 +82,6 @@ export default function Category() {
       console.log(error)
     }
   }
-
 
   if (isLoading) {
     return <p>Loading ...</p>

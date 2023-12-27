@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
+import Card from 'react-bootstrap/Card'
 import { useDispatch, useSelector } from 'react-redux'
+import { ToastContainer } from 'react-toastify'
+
 import { AppDispatch, RootState } from '../../redux/store'
 import { fetchOrders } from '../../redux/slices/products/AdminOrderSlice'
-import Card from 'react-bootstrap/Card'
 import AdminSidebar from '../components/AdminSidebar'
-import { ToastContainer } from 'react-toastify'
 
 export default function AdminOrderList() {
   const { error, isLoading, orders } = useSelector((state: RootState) => state.orderReducer)

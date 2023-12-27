@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
 import Home from '../components/pages/Home'
 import AdminDashboard from '../components/pages/AdminDashboard'
 import Error from '../components/pages/Error'

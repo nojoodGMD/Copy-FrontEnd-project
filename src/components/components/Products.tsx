@@ -1,13 +1,13 @@
 import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import AdminSidebar from './AdminSidebar'
 import { fetchCategory } from '../../redux/slices/products/CategoriesSlice'
+import AdminSidebar from './AdminSidebar'
 import { AppDispatch, RootState } from '../../redux/store'
 import {
   fetchProducts,
@@ -140,7 +140,6 @@ export default function Products() {
       })
     }
 
-
     setEditProduct((prevData) => {
       return { ...prevData, [name]: value }
     })
@@ -153,7 +152,7 @@ export default function Products() {
       await dispatch(updateProduct(editProduct))
       toast.success('Product Data Updated Successfully!')
     } catch (error) {
-      toast.error("Soemthing went wrong.")
+      toast.error('Soemthing went wrong.')
     }
   }
 
@@ -186,13 +185,7 @@ export default function Products() {
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Product Image</Form.Label>
-                  <Form.Control
-                    type="file"
-                    name="image"
-                    // value={newProduct.image string}ring} string}
-                    onChange={handleChange}
-                    required
-                  />
+                  <Form.Control type="file" name="image" onChange={handleChange} required />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Description</Form.Label>
@@ -356,7 +349,7 @@ export default function Products() {
                             <i
                               className="fa-solid fa-pen-to-square"
                               id="product-detail__edit"
-                              onClick={() => handleEdit(product._id)}></i>{' '}
+                              onClick={() => handleEdit(product._id)}></i>
                           </td>
                         </tr>
                       </tbody>

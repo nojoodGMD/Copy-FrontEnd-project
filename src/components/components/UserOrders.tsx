@@ -1,7 +1,9 @@
 import UserSidebar from './UserSidebar'
 import { useSelector } from 'react-redux'
-import { RootState } from '../../redux/store'
 import Table from 'react-bootstrap/Table'
+
+import { RootState } from '../../redux/store'
+
 
 export default function UserOrders() {
   const { cartItems } = useSelector((state: RootState) => state.cartReducer)

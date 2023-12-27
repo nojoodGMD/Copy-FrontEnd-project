@@ -1,16 +1,17 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '../../redux/store'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
-import { deleteAllItem, deleteItem } from '../../redux/slices/products/CartSlice'
 import { toast } from 'react-toastify'
+
+import { deleteAllItem, deleteItem } from '../../redux/slices/products/CartSlice'
+import { AppDispatch, RootState } from '../../redux/store'
 
 export default function Cart() {
   const { cartItems } = useSelector((state: RootState) => state.cartReducer)
   const dispatch: AppDispatch = useDispatch()
 
-  const handleRemove = (productId: number) => {
+  const handleRemove = (productId: string) => {
     dispatch(deleteItem(productId))
     toast.success('Item Removed From Cart.')
   }
@@ -47,9 +48,13 @@ export default function Cart() {
             {cartItems.length > 0 &&
               cartItems.map((product) => {
                 return (
-                  <div key={product.id} className="home__signel-product">
+                  <div key={product._id} className="home__signel-product">
                     <Card style={{ width: '18rem' }}>
-                      <Card.Img variant="top" className="home__product-img" src={product.image} />
+                      <Card.Img
+                        variant="top"
+                        className="home__product-img"
+                        src={product.image as string}
+                      />
                       <Card.Body>
                         <Card.Title>{product.name}</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted">
@@ -60,7 +65,7 @@ export default function Cart() {
                           <Button
                             variant="primary"
                             className="home__btn"
-                            onClick={() => handleRemove(product.id)}>
+                            onClick={() => handleRemove(product._id)}>
                             Remove from Cart
                           </Button>
                         </div>

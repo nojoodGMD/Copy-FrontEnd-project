@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import { activateUser } from '../../redux/slices/products/UsersSlice'
-import { toast } from 'react-toastify'
 
 export default function ActivateAccount() {
   const { token } = useParams()

@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react'
-import UserSidebar from './UserSidebar'
-import Card from 'react-bootstrap/Card'
-import ListGroup from 'react-bootstrap/ListGroup'
 import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify'
+import ListGroup from 'react-bootstrap/ListGroup'
+import { useEffect, useState } from 'react'
+import Card from 'react-bootstrap/Card'
 import Image from 'react-bootstrap/Image'
-
-
-import { AppDispatch, RootState } from '../../redux/store'
-import { fetchUsers, updateUser } from '../../redux/slices/products/UsersSlice'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+
+import UserSidebar from './UserSidebar'
+import { AppDispatch, RootState } from '../../redux/store'
+import { fetchUsers, updateUser } from '../../redux/slices/products/UsersSlice'
 
 export default function UserProfile() {
   const { userData } = useSelector((state: RootState) => state.usersReducer)
@@ -19,7 +18,7 @@ export default function UserProfile() {
   const [isUpdate, setIsUpdate] = useState(false)
 
   const [user, setUser] = useState({
-    _id : userData?._id,
+    _id: userData?._id,
     name: userData?.name,
     email: userData?.email
   })
@@ -47,13 +46,11 @@ export default function UserProfile() {
       event.preventDefault()
       setIsUpdate(false)
       await dispatch(updateUser(user))
-      toast.success("User data updated successfully")  
+      toast.success('User data updated successfully')
     } catch (error) {
       console.log(error)
     }
   }
-  
-    
 
   return (
     <div className="main-container">
@@ -95,11 +92,7 @@ export default function UserProfile() {
               <Card style={{ width: '18rem' }}>
                 <Card.Body>
                   <Card.Title>User Profile</Card.Title>
-                  <Image
-                            src={userData?.image}
-                            className="user-profile-pic"
-                            rounded
-                          />
+                  <Image src={userData?.image} className="user-profile-pic" rounded />
                 </Card.Body>
                 <ListGroup className="list-group-flush">
                   <ListGroup.Item>User Name: {userData?.name}</ListGroup.Item>

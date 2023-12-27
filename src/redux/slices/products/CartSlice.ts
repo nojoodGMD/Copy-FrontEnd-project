@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+
 import { Product } from './productSlice'
 
 const data =
@@ -21,7 +22,7 @@ const cartSlice = createSlice({
       localStorage.setItem('cart', JSON.stringify(state.cartItems))
     },
     deleteItem: (state, action) => {
-      const filteredItem = state.cartItems.filter((cartItem) => cartItem.id !== action.payload)
+      const filteredItem = state.cartItems.filter((cartItem) => cartItem._id !== action.payload)
       state.cartItems = filteredItem
       localStorage.setItem('cart', JSON.stringify(state.cartItems))
     },

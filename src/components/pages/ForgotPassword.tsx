@@ -1,16 +1,15 @@
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { AppDispatch, RootState } from '../../redux/store'
-import { fetchUsers, forgotPassword } from '../../redux/slices/products/UsersSlice'
+import { toast, ToastContainer } from 'react-toastify'
+import { useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { toast, ToastContainer } from 'react-toastify'
+
+import { AppDispatch } from '../../redux/store'
+import { fetchUsers, forgotPassword } from '../../redux/slices/products/UsersSlice'
 
 export default function ForgotPassword() {
   const [emailVal, setEmail] = useState({ email: '' })
 
-  // const { users } = useSelector((state: RootState) => state.usersReducer)
   const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
@@ -33,20 +32,20 @@ export default function ForgotPassword() {
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       )
-      if(!validEmail){
-        toast.info('Please enter a valid email address')
-        return false
-      }
-      return true
+    if (!validEmail) {
+      toast.info('Please enter a valid email address')
+      return false
+    }
+    return true
   }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     const isEmailGood = checkEmail()
-    if(isEmailGood){
-        const response = await forgotPassword(emailVal)
-        setEmail({email:''})
-        toast.success(response.data.message)
+    if (isEmailGood) {
+      const response = await forgotPassword(emailVal)
+      setEmail({ email: '' })
+      toast.success(response.data.message)
     }
   }
 

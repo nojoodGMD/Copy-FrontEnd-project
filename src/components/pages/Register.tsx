@@ -1,11 +1,12 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { ToastContainer, toast } from 'react-toastify'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+
 import { AppDispatch, RootState } from '../../redux/store'
 import { fetchUsers, createUser } from '../../redux/slices/products/UsersSlice'
-import { useEffect } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
 
 export default function Register() {
   const initialState = {
@@ -100,7 +101,9 @@ export default function Register() {
       <ToastContainer />
       <div className="register__container">
         <Form.Group className="mb-3">
-          <Form.Label>User Name<span style={{color:'crimson'}}>*</span></Form.Label>
+          <Form.Label>
+            User Name<span style={{ color: 'crimson' }}>*</span>
+          </Form.Label>
           <Form.Control
             placeholder="Enter User Name"
             name="name"
@@ -111,7 +114,9 @@ export default function Register() {
           <p className="validation-msg">{nameError.msg}</p>
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Email<span style={{color:'crimson'}}>*</span></Form.Label>
+          <Form.Label>
+            Email<span style={{ color: 'crimson' }}>*</span>
+          </Form.Label>
           <Form.Control
             placeholder="Enter User Email"
             type="email"
@@ -123,7 +128,9 @@ export default function Register() {
           <p className="validation-msg">{emailError.msg}</p>
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Password<span style={{color:'crimson'}}>*</span></Form.Label>
+          <Form.Label>
+            Password<span style={{ color: 'crimson' }}>*</span>
+          </Form.Label>
           <Form.Control
             placeholder="Enter Password"
             type="password"
@@ -135,7 +142,9 @@ export default function Register() {
           <p className="validation-msg">{passwordError.msg}</p>
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Phone Number<span style={{color:'crimson'}}>*</span></Form.Label>
+          <Form.Label>
+            Phone Number<span style={{ color: 'crimson' }}>*</span>
+          </Form.Label>
           <Form.Control
             placeholder="Enter Phone Number"
             name="phone"

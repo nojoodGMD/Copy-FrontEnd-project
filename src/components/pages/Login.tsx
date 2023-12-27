@@ -1,17 +1,17 @@
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
+import { toast, ToastContainer } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { AppDispatch } from '../../redux/store'
-import { fetchUsers, login } from '../../redux/slices/products/UsersSlice'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { toast, ToastContainer } from 'react-toastify'
+
+import { fetchUsers, login } from '../../redux/slices/products/UsersSlice'
+import { AppDispatch } from '../../redux/store'
 
 export default function Login() {
   const navigate = useNavigate()
   const [user, setUser] = useState({ email: '', password: '' })
 
-  // const { users } = useSelector((state: RootState) => state.usersReducer)
   const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function Login() {
   const handleSubmit = async (event: FormEvent) => {
     try {
       event.preventDefault()
-      if(user.email==='' || user.password===''){
+      if (user.email === '' || user.password === '') {
         toast.error('Please enter both your email and password.')
         return
       }
@@ -40,7 +40,7 @@ export default function Login() {
     })
   }
 
-  const handleForgetPassword = ()=>{
+  const handleForgetPassword = () => {
     navigate('/forgotPassword')
   }
 

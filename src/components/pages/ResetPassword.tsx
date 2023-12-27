@@ -1,27 +1,25 @@
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { ChangeEvent, FormEvent, useState } from 'react'
 
 import { resetPassword } from '../../redux/slices/products/UsersSlice'
-
-
 
 export default function ResetPassword() {
   const { token } = useParams()
   const nav = useNavigate()
 
-  const [updatedData, setUpdatedData] = useState({ token : token ,password: '' })
+  const [updatedData, setUpdatedData] = useState({ token: token, password: '' })
 
-  const handleUpdatePassword = async (event : FormEvent) => {
+  const handleUpdatePassword = async (event: FormEvent) => {
     event.preventDefault()
     try {
-        const response = await resetPassword(updatedData)
-        toast.success(response?.data.message)
-        nav('/login')
+      const response = await resetPassword(updatedData)
+      toast.success(response?.data.message)
+      nav('/login')
     } catch (error) {
-        console.log(error)
+      console.log(error)
     }
   }
 
@@ -47,10 +45,10 @@ export default function ResetPassword() {
             />
           </Form.Group>
           <div className="login-form__btns">
-          <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit">
               Reset Passeword
-        </Button>
-        </div>
+            </Button>
+          </div>
         </Form>
       </div>
     </div>
