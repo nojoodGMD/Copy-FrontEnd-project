@@ -92,7 +92,7 @@ const Home = () => {
                   return (
                     <div key={product._id} className="home__signel-product">
                       <Card style={{ width: '18rem' }}>
-                        <Card.Img variant="top" className="home__product-img" src={product.image} />
+                        <Card.Img variant="top" className="home__product-img" src={product.image as string} />
                         <Card.Body>
                           <Card.Title>{product.name}</Card.Title>
                           <Card.Subtitle className="mb-2 text-muted">

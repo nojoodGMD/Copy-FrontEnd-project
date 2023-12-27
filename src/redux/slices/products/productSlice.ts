@@ -61,6 +61,15 @@ export const deleteProduct = createAsyncThunk('products/deleteProduct', async (s
   }
 })
 
+export const updateProduct = createAsyncThunk('products/updateProduct', async ( newData : object) => {
+  try {
+    const response = await axios.put(`${baseURL}/products/${newData.slug}`,newData)
+    return response.data.payload
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 export const createProduct = async (newProduct: FormData) => {
   try {
     const response = await axios.post(`${baseURL}/products`, newProduct)
@@ -105,32 +114,9 @@ export const productSlice = createSlice({
         state.products.sort((a, b) => a.name.localeCompare(b.name))
       }
     },
-    editedProduct: (state, action) => {
-      const id = action.payload.id
-      const editedData: Product = action.payload
-      const foundProduct = state.products.find((product) => product.id === id)
-      if (foundProduct) {
-        if (editedData.variants && typeof editedData.variants === 'string') {
-          editedData.variants = editedData.variants.split(',')
-        }
-        if (editedData.sizes && typeof editedData.sizes === 'string') {
-          editedData.sizes = editedData.sizes.split(',')
-        }
-        foundProduct.name = editedData.name
-        foundProduct.image = editedData.image
-        foundProduct.description = editedData.description
-        foundProduct.price = Number(editedData.price)
-        editedData.sizes === ''
-          ? (foundProduct.sizes = [])
-          : (foundProduct.sizes = editedData.sizes)
-        editedData.variants === ''
-          ? (foundProduct.variants = [])
-          : (foundProduct.variants = editedData.variants)
-      }
-    }
   },
   extraReducers(builder) {
-    builder.addCase(fetchProducts.pending, (state, action) => {
+    builder.addCase(fetchProducts.pending, (state) => {
       state.isLoading = true
       state.error = null
     })
@@ -139,6 +125,10 @@ export const productSlice = createSlice({
       state.products = action.payload
     })
     builder.addCase(getSignleProdct.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.products = action.payload
+    })
+    builder.addCase(updateProduct.fulfilled, (state, action) => {
       state.isLoading = false
       state.products = action.payload
     })
@@ -156,6 +146,5 @@ export const {
   findProduct,
   setSearchTerm,
   sortProducts,
-  editedProduct,
 } = productSlice.actions
 export default productSlice.reducer

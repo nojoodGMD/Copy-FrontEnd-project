@@ -12,9 +12,9 @@ import { AppDispatch, RootState } from '../../redux/store'
 import {
   fetchProducts,
   deleteProduct,
-  editedProduct,
   createProduct,
-  Product
+  Product,
+  updateProduct
 } from '../../redux/slices/products/productSlice'
 
 export default function Products() {
@@ -53,7 +53,7 @@ export default function Products() {
 
   const handleDelete = async (slug: string) => {
     try {
-      const response =  await dispatch(deleteProduct(slug))
+      const response = await dispatch(deleteProduct(slug))
       toast.success(response.payload.message)
     } catch (error) {
       console.log(error)
@@ -65,13 +65,13 @@ export default function Products() {
       event.preventDefault()
 
       const formData = new FormData()
-      formData.append('name',newProduct.name)
-      formData.append('image',newProduct.image as Blob)
-      formData.append('description',newProduct.description)
-      formData.append('categoryId',newProduct.categoryId)
-      formData.append('price',String(newProduct.price))
-      formData.append('quantity',String(newProduct.quantity))
-      formData.append('shipping',String(newProduct.shipping))
+      formData.append('name', newProduct.name)
+      formData.append('image', newProduct.image as Blob)
+      formData.append('description', newProduct.description)
+      formData.append('categoryId', newProduct.categoryId)
+      formData.append('price', String(newProduct.price))
+      formData.append('quantity', String(newProduct.quantity))
+      formData.append('shipping', String(newProduct.shipping))
       // for (const [key,value] of formData){console.log(key, value)}
 
       const response = await createProduct(formData)
@@ -85,7 +85,6 @@ export default function Products() {
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    // const { name, value } = event.target
     const { name, value, type } = event.target
 
     if (type === 'file') {
@@ -93,20 +92,20 @@ export default function Products() {
       setNewProduct((prevProduct) => {
         return { ...prevProduct, [name]: fileInput.files?.[0] } // optional chaining ?.
       })
-    }else{
+    } else {
       const isNumber = name === 'price' || name === 'quantity' || name === 'shipping'
-    if (isNumber) {
+      if (isNumber) {
+        setNewProduct({
+          ...newProduct,
+          [name]: Number(value)
+        })
+        return
+      }
+
       setNewProduct({
         ...newProduct,
-        [name]: Number(value)
+        [name]: value
       })
-      return
-    }
-
-    setNewProduct({
-      ...newProduct,
-      [name]: value
-    })
     }
   }
 
@@ -123,7 +122,6 @@ export default function Products() {
     return foundCategory ? foundCategory.name + ' ' : 'Category not found'
   }
 
-
   const handleEdit = (id: string) => {
     setIsEdit(true)
     const foundProduct = products.find((product) => product._id === id)
@@ -135,30 +133,28 @@ export default function Products() {
   const handleEditChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
 
-    const isList = name === 'variants' || name === 'sizes'
-    if (isList) {
-      setEditProduct((prevData) => {
-        return { ...prevData, [name]: value.split(',') }
-      })
-    }
-
-    const isPrice = name === 'price'
+    const isPrice = name === 'price' || 'quantity'
     if (isPrice) {
       setEditProduct((prevData) => {
         return { ...prevData, [name]: Number(value) }
       })
     }
 
+
     setEditProduct((prevData) => {
       return { ...prevData, [name]: value }
     })
   }
 
-  const handleEditSubmit = (event: FormEvent) => {
-    event.preventDefault()
-    setIsEdit(false)
-    dispatch(editedProduct(editProduct))
-    toast.success('Product Data Updated Successfully!')
+  const handleEditSubmit = async (event: FormEvent) => {
+    try {
+      event.preventDefault()
+      setIsEdit(false)
+      await dispatch(updateProduct(editProduct))
+      toast.success('Product Data Updated Successfully!')
+    } catch (error) {
+      toast.error("Soemthing went wrong.")
+    }
   }
 
   return (
@@ -265,7 +261,7 @@ export default function Products() {
               </Form>
             </>
           )}
-          {/* {isEdit && (
+          {isEdit && (
             <Form onSubmit={handleEditSubmit}>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Product Name</Form.Label>
@@ -274,15 +270,6 @@ export default function Products() {
                   name="name"
                   placeholder="Enter Product Name"
                   value={editProduct.name}
-                  onChange={handleEditChange}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label>Product Image</Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image"
-                  placeholder="Enter Image URL"
                   onChange={handleEditChange}
                 />
               </Form.Group>
@@ -306,12 +293,22 @@ export default function Products() {
                   onChange={handleEditChange}
                 />
               </Form.Group>
-              
+              <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Label>Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="quantity"
+                  placeholder="Enter Product Price"
+                  value={editProduct.quantity}
+                  onChange={handleEditChange}
+                />
+              </Form.Group>
+
               <Button variant="primary" type="submit">
                 Submit
               </Button>
             </Form>
-          )} */}
+          )}
 
           <h2>List of products</h2>
           <section>
@@ -337,16 +334,18 @@ export default function Products() {
                         <tr>
                           <td>{product.slug}</td>
                           <td>
-                            <img className="admin__product-img" src={product.image as string} alt={product.name} />
+                            <img
+                              className="admin__product-img"
+                              src={product.image as string}
+                              alt={product.name}
+                            />
                           </td>
                           <td>{product.name}</td>
                           <td>{product.price}</td>
                           <td>{product.description}</td>
                           <td>{product.quantity}</td>
-                          <td>
-                             {getCategoryNameById(product.categoryId._id)}  
-                          </td>
-            
+                          <td>{getCategoryNameById(product.categoryId._id)}</td>
+
                           <td>
                             <i
                               className="fa-solid fa-trash"
